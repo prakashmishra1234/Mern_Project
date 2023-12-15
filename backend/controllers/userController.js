@@ -84,7 +84,7 @@ exports.forgetPassword = catchAsyncError(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: `Ecommerce Password Recovery`,
+      subject: `Mern_Project Password Recovery`,
       message,
     });
     res.status(200).json({
@@ -115,7 +115,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(
       new ErrorHandler(
-        "Reset Password Token is invalid or has been expired",
+        "Reset password token is invalid or has been expired",
         400
       )
     );
