@@ -97,6 +97,7 @@ const Login: React.FC = () => {
                 variant="outlined"
                 autoComplete="off"
                 id="password"
+                type="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 error={
