@@ -5,36 +5,38 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { AuthLogin, LoginValidator } from "../../utils/helper";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
+import useApi from "../../api/useApi";
+import { ApiMethods } from "../../enum/ApiMethods";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (value: AuthLogin) => {
-    context.setLoading(true);
-    axios
-      .post("/api/v1/login", value)
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message ?? "Something went wrong");
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
+  const HandleSubmit = async (value: AuthLogin) => {
+    const apiEndpoint = "/api/v1/login";
+    const requestBody = value;
+    const { data, error, loading } = useApi(
+      apiEndpoint,
+      ApiMethods.POST,
+      requestBody
+    );
+    context.setLoading(loading);
+    if (error) {
+      toast.error(error ?? "");
+    }
+    if (data && data.success) {
+      toast.success(data.message);
+      navigate("/");
+    }
   };
 
   const formik = useFormik({
     initialValues: LoginValidator.initials,
     validationSchema: LoginValidator.validation,
-    onSubmit: handleSubmit,
+    onSubmit: HandleSubmit,
     validateOnChange: true,
   });
 
