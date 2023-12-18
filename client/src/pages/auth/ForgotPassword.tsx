@@ -1,16 +1,19 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useContext } from "react";
-import { ForgotPasswordValidator } from "../../utils/helper";
+import {
+  AuthForgetPassword,
+  ForgotPasswordValidator,
+} from "../../utils/helper";
 import { AuthContext } from "../../Store";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
-const ForgotPassword = () => {
+const ForgotPassword: React.FC = () => {
   const context = useContext(AuthContext);
 
-  const handleSubmit = (value: any) => {
+  const handleSubmit = (value: AuthForgetPassword) => {
     context.setLoading(true);
     axios
       .post("/api/v1/forgetPassword", value)

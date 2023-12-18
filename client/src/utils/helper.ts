@@ -24,12 +24,7 @@ export const SignupValidator = {
   }),
 };
 
-export interface AuthForm {
-  username?: string;
-  fullname?: string;
-  email?: string;
-  password: string;
-}
+export type AuthSignUp = yup.InferType<typeof SignupValidator.validation>;
 
 export const LoginValidator = {
   initials: {
@@ -41,6 +36,8 @@ export const LoginValidator = {
     password: yup.string().required("Password is required"),
   }),
 };
+
+export type AuthLogin = yup.InferType<typeof LoginValidator.validation>;
 
 export const ForgotPasswordValidator = {
   initials: {
@@ -57,6 +54,10 @@ export const ForgotPasswordValidator = {
   }),
 };
 
+export type AuthForgetPassword = yup.InferType<
+  typeof ForgotPasswordValidator.validation
+>;
+
 export const PasswordValidator = {
   initials: {
     password: "",
@@ -70,6 +71,10 @@ export const PasswordValidator = {
       .oneOf([yup.ref("password")], "Password and Confirm Password must match"),
   }),
 };
+
+export type AuthChangePassword = yup.InferType<
+  typeof PasswordValidator.validation
+>;
 
 export const setLocalStorageData = (key: string, value: any): void => {
   localStorage.setItem(key, JSON.stringify(value));

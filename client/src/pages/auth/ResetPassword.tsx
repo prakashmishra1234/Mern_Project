@@ -2,17 +2,17 @@ import React, { useContext } from "react";
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
-import { PasswordValidator } from "../../utils/helper";
+import { AuthChangePassword, PasswordValidator } from "../../utils/helper";
 import { AuthContext } from "../../Store";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ResetPassword = () => {
+const ResetPassword: React.FC = () => {
   const { token } = useParams();
   const context = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (value: any) => {
+  const handleSubmit = (value: AuthChangePassword) => {
     context.setLoading(true);
     axios
       .put(`/api/v1/resetPassword/${token}`, value)

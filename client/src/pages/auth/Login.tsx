@@ -4,28 +4,22 @@ import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
-import {
-  AuthForm,
-  LoginValidator,
-  setLocalStorageData,
-} from "../../utils/helper";
+import { AuthLogin, LoginValidator } from "../../utils/helper";
 import axios from "axios";
-import { LOCAL_STORAGE_KEY } from "../../constant";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
 
-const Login = () => {
+const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (value: AuthForm) => {
+  const handleSubmit = (value: AuthLogin) => {
     context.setLoading(true);
     axios
       .post("/api/v1/login", value)
       .then((res) => {
         toast.success(res.data.message);
-        setLocalStorageData(LOCAL_STORAGE_KEY, res.data.id);
         navigate("/");
       })
       .catch((err) => {

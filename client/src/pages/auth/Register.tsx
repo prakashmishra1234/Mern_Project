@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import {
-  AuthForm,
+  AuthSignUp,
   SignupValidator,
   setLocalStorageData,
 } from "../../utils/helper";
@@ -15,32 +15,16 @@ import { Paper, TextField, Typography } from "@mui/material";
 import toast from "react-hot-toast";
 import { LOCAL_STORAGE_KEY } from "../../constant";
 
-const Register = () => {
+const Register: React.FC = () => {
   const context = React.useContext(AuthContext);
   const navigate = useNavigate();
 
-  // const getCountryCode = () => {
-  //   context.setLoading(true);
-  //   axios
-  //     .get("/api/v1/countrycode")
-  //     .then((res) => {
-  //       setcountryCodes(res.data.countries ?? []);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       context.setLoading(false);
-  //     });
-  // };
-
-  const handleSubmit = (value: AuthForm) => {
+  const handleSubmit = (value: AuthSignUp) => {
     context.setLoading(true);
     axios
       .post("/api/v1/register", value)
       .then((res) => {
         toast.success(res.data.message);
-        setLocalStorageData(LOCAL_STORAGE_KEY, res.data.id);
         navigate("/");
       })
       .catch((err) => {
