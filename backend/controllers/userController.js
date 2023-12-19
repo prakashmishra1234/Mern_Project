@@ -2,6 +2,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../model/userModel");
 const ErrorHandler = require("../utils/errorHandler");
 const sendToken = require("../utils/jwtTokens");
+const sendData = require("../utils/sendData");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 
@@ -46,18 +47,12 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
-  res.status(200).json({
-    success: true,
-    message: "Logged out successfully",
-  });
+  sendData(200, "User logged out successfully.", null, res);
 });
 
 // get user details
 exports.getUserDetails = catchAsyncError(async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    userdata: req.user,
-  });
+  sendData(200, "User data fetched successfully", req.user, res);
 });
 
 // forgot password
@@ -87,10 +82,7 @@ exports.forgetPassword = catchAsyncError(async (req, res, next) => {
       subject: `Mern_Project Password Recovery`,
       message,
     });
-    res.status(200).json({
-      success: true,
-      message: `Password recovery mail sent successfully`,
-    });
+    sendData(200, "Password recovery mail sent successfully.", null, res);
   } catch (error) {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;

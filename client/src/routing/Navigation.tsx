@@ -7,15 +7,22 @@ import PublicRoute from "./component/PublicRoute";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import Navbar from "../Components/common/Navbar";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <Home />
+        <Navbar />
       </ProtectedRoute>
     ),
+    children: [
+      {
+        path: "home",
+        element: <Home />,
+      },
+    ],
   },
   {
     path: "/login",

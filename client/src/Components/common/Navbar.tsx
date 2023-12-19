@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -13,11 +13,15 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Outlet } from "react-router-dom";
+import { AuthContext } from "../../Store";
+import axios from "axios";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
+  const context = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -39,6 +43,28 @@ const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const getUserData = () => {
+    context.setLoading(true);
+    const value = document.cookie;
+    const temp = value.split("=");
+    context.setJwttoken(temp[1]);
+    axios
+      .get("/api/v1/me")
+      .then((res) => {
+        console.log(res.data.userdata);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        context.setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
   return (
     <Container maxWidth="xl">
       <Toolbar disableGutters>
@@ -158,6 +184,7 @@ const Navbar = () => {
           </Menu>
         </Box>
       </Toolbar>
+      <Outlet />
     </Container>
   );
 };

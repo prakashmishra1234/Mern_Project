@@ -1,6 +1,5 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { LOCAL_STORAGE_KEY } from "../../constant";
 
 const ProtectedRoute = (props: any) => {
   const value = document.cookie;
