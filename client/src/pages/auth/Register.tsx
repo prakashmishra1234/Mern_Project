@@ -4,11 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
-import {
-  AuthSignUp,
-  SignupValidator,
-  setLocalStorageData,
-} from "../../utils/helper";
+import { AuthSignUp, SignupValidator } from "../../utils/helper";
 import axios from "axios";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
@@ -60,7 +56,7 @@ const Register: React.FC = () => {
         component="form"
         onSubmit={formik.handleSubmit}
         m={3}
-        width={{ md: "35%", xs: "100%" }}
+        width={{ sm: "35%", md: "45%", xs: "100%" }}
       >
         <Paper elevation={3} sx={{ padding: "0.8rem", borderRadius: "1rem" }}>
           <Grid container spacing={2}>

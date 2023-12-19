@@ -52,7 +52,7 @@ const ForgotPassword: React.FC = () => {
         id="ForgotPasswordForm"
         onSubmit={formik.handleSubmit}
         m={3}
-        width={{ md: "35%", xs: "100%" }}
+        width={{ sm: "35%", md: "45%", xs: "100%" }}
       >
         <Paper elevation={3} sx={{ padding: "0.8rem", borderRadius: "1rem" }}>
           <Grid container spacing={2}>

@@ -1,3 +1,4 @@
+// useApi.ts
 import React from "react";
 import { ApiMethods } from "../enum/ApiMethods";
 import axios from "axios";
@@ -9,28 +10,27 @@ interface Idata {
 }
 
 const useApi = (url: string, method: ApiMethods, requestBody: any) => {
-  const [data, setdata] = React.useState<Idata>();
+  const [data, setData] = React.useState<Idata | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<string | null>(null);
 
   const fetchApi = async () => {
     setLoading(true);
 
-    axios[method](url, requestBody)
-      .then((res: any) => {
-        setdata(res.data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        setError(err.response.data.message ?? "Something went wrong");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const res = await axios[method](url, requestBody);
+      setData(res.data);
+    } catch (err: any) {
+      console.log(err);
+      setError(err.response?.data?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
+
   React.useEffect(() => {
     fetchApi();
-  }, []);
+  }, [url, method, requestBody]);
 
   return { data, error, loading };
 };

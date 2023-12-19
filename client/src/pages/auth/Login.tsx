@@ -10,27 +10,27 @@ import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
 import useApi from "../../api/useApi";
 import { ApiMethods } from "../../enum/ApiMethods";
+import axios from "axios";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
   const navigate = useNavigate();
 
-  const HandleSubmit = async (value: AuthLogin) => {
-    const apiEndpoint = "/api/v1/login";
-    const requestBody = value;
-    const { data, error, loading } = useApi(
-      apiEndpoint,
-      ApiMethods.POST,
-      requestBody
-    );
-    context.setLoading(loading);
-    if (error) {
-      toast.error(error ?? "");
-    }
-    if (data && data.success) {
-      toast.success(data.message);
-      navigate("/");
-    }
+  const HandleSubmit = (value: AuthLogin) => {
+    context.setLoading(true);
+    axios
+      .post("/api/v1/login", value)
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message ?? "Something went wrong");
+        console.log(err);
+      })
+      .finally(() => {
+        context.setLoading(false);
+      });
   };
 
   const formik = useFormik({
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
         component="form"
         onSubmit={formik.handleSubmit}
         m={3}
-        width={{ md: "35%", xs: "100%" }}
+        width={{ sm: "35%", md: "45%", xs: "100%" }}
       >
         <Paper elevation={3} sx={{ padding: "0.8rem", borderRadius: "1rem" }}>
           <Grid container spacing={2}>
