@@ -18,7 +18,7 @@ const ResetPassword: React.FC = () => {
       .put(`/api/v1/resetPassword/${token}`, value)
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/home");
       })
       .catch((err) => {
         toast.error(err.response.data.message ?? "Something went wrong");

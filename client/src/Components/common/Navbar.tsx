@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Store";
 import axios from "axios";
 
@@ -22,6 +22,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
   const context = useContext(AuthContext);
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -64,6 +65,7 @@ const Navbar = () => {
 
   useEffect(() => {
     getUserData();
+    navigate("/home");
   }, []);
   return (
     <Container maxWidth="xl">
@@ -147,7 +149,7 @@ const Navbar = () => {
             <Button
               key={page}
               onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ my: 2, display: "block" }}
             >
               {page}
             </Button>

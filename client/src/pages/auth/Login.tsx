@@ -22,7 +22,7 @@ const Login: React.FC = () => {
       .post("/api/v1/login", value)
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/home");
       })
       .catch((err) => {
         toast.error(err.response.data.message ?? "Something went wrong");

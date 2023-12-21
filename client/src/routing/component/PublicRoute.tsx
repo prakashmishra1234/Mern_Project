@@ -9,7 +9,7 @@ const PublicRoute = (props: any) => {
   if (temp[0] !== "token")
     return <React.Fragment>{props.children}</React.Fragment>;
 
-  return <Navigate to="/" />;
+  return <Navigate to="/home" />;
 };
 
 export default PublicRoute;
