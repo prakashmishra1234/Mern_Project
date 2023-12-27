@@ -16,13 +16,16 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Store";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { userType } from "../../type/userType";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 
 const Navbar = () => {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -53,9 +56,27 @@ const Navbar = () => {
     axios
       .get("/api/v1/me")
       .then((res) => {
-        console.log(res.data.userdata);
+        context.setUser(res.data.data as userType);
+        console.log(res.data.data);
       })
       .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        context.setLoading(false);
+      });
+  };
+
+  const onClickLogout = () => {
+    context.setLoading(true);
+    axios
+      .get("/api/v1/logout")
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/login");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message ?? "Something went wrong");
         console.log(err);
       })
       .finally(() => {
@@ -86,7 +107,7 @@ const Navbar = () => {
             textDecoration: "none",
           }}
         >
-          LOGO
+          {context.user.fullname}
         </Typography>
 
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -183,6 +204,9 @@ const Navbar = () => {
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
             ))}
+            <MenuItem onClick={onClickLogout}>
+              <Typography textAlign="center">{"Logout"}</Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
