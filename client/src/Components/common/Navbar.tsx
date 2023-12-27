@@ -107,7 +107,7 @@ const Navbar = () => {
             textDecoration: "none",
           }}
         >
-          {context.user.fullname}
+          LOGO
         </Typography>
 
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
