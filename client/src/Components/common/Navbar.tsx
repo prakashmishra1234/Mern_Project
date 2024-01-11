@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Store";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -25,6 +25,7 @@ const settings = ["Profile", "Account", "Dashboard"];
 const Navbar = () => {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -40,7 +41,8 @@ const Navbar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (page: string) => {
+    navigate(page.toLowerCase());
     setAnchorElNav(null);
   };
 
@@ -64,6 +66,11 @@ const Navbar = () => {
       })
       .finally(() => {
         context.setLoading(false);
+        if (location.pathname !== "/") {
+          navigate(location.pathname);
+        } else {
+          navigate("/home");
+        }
       });
   };
 
@@ -86,8 +93,8 @@ const Navbar = () => {
 
   useEffect(() => {
     getUserData();
-    navigate("/home");
   }, []);
+
   return (
     <Container maxWidth="xl">
       <Toolbar disableGutters>
@@ -140,7 +147,7 @@ const Navbar = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
+              <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                 <Typography textAlign="center">{page}</Typography>
               </MenuItem>
             ))}
@@ -169,7 +176,7 @@ const Navbar = () => {
           {pages.map((page) => (
             <Button
               key={page}
-              onClick={handleCloseNavMenu}
+              onClick={() => handleCloseNavMenu("page")}
               sx={{ my: 2, display: "block" }}
             >
               {page}
@@ -201,7 +208,7 @@ const Navbar = () => {
           >
             {settings.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
+                <Link to={setting.toLocaleLowerCase()}>{setting}</Link>
               </MenuItem>
             ))}
             <MenuItem onClick={onClickLogout}>
