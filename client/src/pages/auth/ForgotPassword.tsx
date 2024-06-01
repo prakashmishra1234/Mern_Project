@@ -6,27 +6,13 @@ import {
   ForgotPasswordValidator,
 } from "../../utils/helper";
 import { AuthContext } from "../../Store";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const ForgotPassword: React.FC = () => {
   const context = useContext(AuthContext);
 
   const handleSubmit = (value: AuthForgetPassword) => {
-    context.setLoading(true);
-    axios
-      .post("/api/v1/forgetPassword", value)
-      .then((res) => {
-        toast.success(res.data.message);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message ?? "Something went wrong");
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
+    context.forgetPassword(value);
   };
   const formik = useFormik({
     initialValues: ForgotPasswordValidator.initials,

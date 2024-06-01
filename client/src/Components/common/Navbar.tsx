@@ -13,19 +13,17 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Store";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { userType } from "../../type/userType";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard"];
+const pages = ["Home"];
+const settings = ["Profile"];
 
 const Navbar = () => {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -42,7 +40,6 @@ const Navbar = () => {
   };
 
   const handleCloseNavMenu = (page: string) => {
-    navigate(page.toLowerCase());
     setAnchorElNav(null);
   };
 
@@ -50,50 +47,9 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
-  const getUserData = () => {
-    context.setLoading(true);
-    const value = document.cookie;
-    const temp = value.split("=");
-    context.setJwttoken(temp[1]);
-    axios
-      .get("/api/v1/me")
-      .then((res) => {
-        context.setUser(res.data.data as userType);
-        console.log(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-        if (location.pathname !== "/") {
-          navigate(location.pathname);
-        } else {
-          navigate("/home");
-        }
-      });
-  };
-
   const onClickLogout = () => {
-    context.setLoading(true);
-    axios
-      .get("/api/v1/logout")
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/login");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message ?? "Something went wrong");
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
+    context.logout();
   };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -147,8 +103,14 @@ const Navbar = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
-                <Typography textAlign="center">{page}</Typography>
+              <MenuItem key={page}>
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to={page.toLocaleLowerCase()}
+                  onClick={() => handleCloseNavMenu(page)}
+                >
+                  {page}
+                </Link>
               </MenuItem>
             ))}
           </Menu>
@@ -174,13 +136,14 @@ const Navbar = () => {
         </Typography>
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
-            <Button
+            <Link
+              style={{ textDecoration: "none", color: "black" }}
+              to={page.toLocaleLowerCase()}
               key={page}
               onClick={() => handleCloseNavMenu("page")}
-              sx={{ my: 2, display: "block" }}
             >
               {page}
-            </Button>
+            </Link>
           ))}
         </Box>
 
@@ -208,7 +171,12 @@ const Navbar = () => {
           >
             {settings.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Link to={setting.toLocaleLowerCase()}>{setting}</Link>
+                <Link
+                  to={setting.toLocaleLowerCase()}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {setting}
+                </Link>
               </MenuItem>
             ))}
             <MenuItem onClick={onClickLogout}>

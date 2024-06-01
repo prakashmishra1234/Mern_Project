@@ -124,3 +124,8 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   await user.save();
   sendToken(user, 200, res, "Password has been changed successfully");
 });
+
+// get all user only for admin
+exports.getAllUser = catchAsyncError(async (rerq, res, next) => {
+  const token = req.cookie();
+});

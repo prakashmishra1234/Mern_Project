@@ -17,20 +17,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const HandleSubmit = (value: AuthLogin) => {
-    context.setLoading(true);
-    axios
-      .post("/api/v1/login", value)
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/home");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message ?? "Something went wrong");
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
+    context.login(value);
   };
 
   const formik = useFormik({

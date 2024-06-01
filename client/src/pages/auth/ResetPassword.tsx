@@ -13,20 +13,7 @@ const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (value: AuthChangePassword) => {
-    context.setLoading(true);
-    axios
-      .put(`/api/v1/resetPassword/${token}`, value)
-      .then((res) => {
-        toast.success(res.data.message);
-        navigate("/home");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message ?? "Something went wrong");
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
+    context.resetPassword(token, value);
   };
 
   const formik = useFormik({
