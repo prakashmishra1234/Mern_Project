@@ -8,7 +8,12 @@ function App() {
   return (
     <Store>
       <SimpleBackdrop />
-      <Toaster />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+        }}
+      />
       <Navigation />
     </Store>
   );

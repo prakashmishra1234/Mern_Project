@@ -6,6 +6,8 @@ import {
   AuthForgetPassword,
   AuthLogin,
 } from "./utils/helper";
+import { getToastMessage } from "./Components/common/ToastMessage";
+import { ToastMessageEnumType } from "./enum/ToastMessage";
 
 interface IContext {
   loading: boolean;
@@ -65,13 +67,17 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .post("/api/v1/login", value)
       .then((res) => {
-        console.log(res);
+        getUserData();
       })
       .catch((err) => {
-        console.log(err);
+        setIsUserVerified(false);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
       })
       .finally(() => {
-        getUserData();
+        setLoading(false);
       });
   };
 
@@ -83,7 +89,10 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setIsUserVerified(false);
       })
       .catch((err) => {
-        console.log(err);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -112,10 +121,17 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .post("/api/v1/forgetPassword", value)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.message);
+        getToastMessage({
+          type: ToastMessageEnumType.success,
+          messgae: res.data.message,
+        });
       })
       .catch((err) => {
-        console.log(err);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -133,7 +149,10 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         console.log(res);
       })
       .catch((err) => {
-        console.log(err);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
       })
       .finally(() => {
         setLoading(false);
