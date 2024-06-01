@@ -9,6 +9,8 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
 import Navbar from "../Components/common/Navbar";
 import Profile from "../pages/Profile";
+import UserManagement from "../pages/UserManagement";
+import AdminRoute from "./component/AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "users",
+        element: (
+          <AdminRoute>
+            <UserManagement />
+          </AdminRoute>
+        ),
       },
     ],
   },

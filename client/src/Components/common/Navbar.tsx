@@ -13,17 +13,15 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Store";
-import axios from "axios";
-import toast from "react-hot-toast";
 
 const pages = ["Home"];
+const adminPages = ["Users"];
 const settings = ["Profile"];
 
 const Navbar = () => {
   const context = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -113,6 +111,18 @@ const Navbar = () => {
                 </Link>
               </MenuItem>
             ))}
+            {context.user.role === "admin" &&
+              adminPages.map((page) => (
+                <MenuItem key={page}>
+                  <Link
+                    style={{ textDecoration: "none", color: "black" }}
+                    to={page.toLocaleLowerCase()}
+                    onClick={() => handleCloseNavMenu(page)}
+                  >
+                    {page}
+                  </Link>
+                </MenuItem>
+              ))}
           </Menu>
         </Box>
         <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -145,6 +155,17 @@ const Navbar = () => {
               {page}
             </Link>
           ))}
+          {context.user.role === "admin" &&
+            adminPages.map((page) => (
+              <Link
+                style={{ textDecoration: "none", color: "black" }}
+                to={page.toLocaleLowerCase()}
+                key={page}
+                onClick={() => handleCloseNavMenu("page")}
+              >
+                {page}
+              </Link>
+            ))}
         </Box>
 
         <Box sx={{ flexGrow: 0 }}>

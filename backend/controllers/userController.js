@@ -1,5 +1,6 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../model/userModel");
+const ApiFeatures = require("../utils/ApiFeatures");
 const ErrorHandler = require("../utils/errorHandler");
 const sendToken = require("../utils/jwtTokens");
 const sendData = require("../utils/sendData");
@@ -47,12 +48,12 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
-  sendData(200, "User logged out successfully.", null, res);
+  sendData(null, 200, res, "User logged out successfully.");
 });
 
 // get user details
 exports.getUserDetails = catchAsyncError(async (req, res, next) => {
-  sendData(200, "User data fetched successfully", req.user, res);
+  sendData(req.user, 200, res, "User data fetched successfully");
 });
 
 // forgot password
@@ -82,7 +83,7 @@ exports.forgetPassword = catchAsyncError(async (req, res, next) => {
       subject: `Mern_Project Password Recovery`,
       message,
     });
-    sendData(200, "Password recovery mail sent successfully.", null, res);
+    sendData(null, 200, res, "Password recovery mail sent successfully.");
   } catch (error) {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -126,6 +127,19 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 });
 
 // get all user only for admin
-exports.getAllUser = catchAsyncError(async (rerq, res, next) => {
-  const token = req.cookie();
+exports.getAllUser = catchAsyncError(async (req, res, next) => {
+  const resultPerPage = 2;
+  const userCount = await User.countDocuments();
+  const apiFeature = new ApiFeatures(User.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+  const users = await apiFeature.query;
+  const data = {
+    users: users,
+    resultPerPage,
+    userCount,
+  };
+  if (!users.length) return next(new ErrorHandler("Users not found.", 400));
+  sendData(data, 200, res, "Users found successfully");
 });
