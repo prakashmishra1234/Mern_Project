@@ -77,7 +77,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   const getUserData = async () => {
-    console.log("getUSerData called");
     setLoading(true);
     axios
       .get("/api/v1/me")
@@ -98,7 +97,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .post("/api/v1/forgetPassword", value)
       .then((res) => {
-        console.log(res.data.message);
         getToastMessage({
           type: ToastMessageEnumType.success,
           messgae: res.data.message,
@@ -144,8 +142,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (temp[0] === "token") getUserData();
     else setIsUserVerifcationCompleted(true);
   }, []);
-
-  console.log(isUserVerifcationCompleted);
 
   return (
     <AuthContext.Provider
