@@ -7,20 +7,27 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import CustomPagination from "../Components/common/Pagination";
 import SearchBar from "../Components/common/SearchBar";
 import { SearchModel } from "../type/SearchType";
-import useApi from "../api/useApi";
+import { getDataFromApi } from "../api/CustomApiCall";
 import { ApiMethods } from "../enum/ApiMethods";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
-  const [searchKeyWord, setSearchKeyWord] = React.useState("");
+  const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [users, setUsers] = React.useState<UserType[]>([]);
   const [totalPage, setTotalPage] = React.useState(0);
-  const { data, error, loading, callApi } = useApi(
-    "/api/v1/users",
-    ApiMethods.GET,
-    { keyword: searchKeyWord, page: currentPage }
-  );
+
+  const getUsersList = async (searchKeyWord: string) => {
+    context.setLoading(true);
+    const data = await getDataFromApi("/api/v1/users", ApiMethods.GET, {
+      keyword: searchKeyWord,
+      page: currentPage,
+    });
+    context.setLoading(false);
+    if (data.data) {
+      setUsers(data.data.users);
+      setTotalPage(data.data.userCount / data.data.resultPerPage);
+    }
+  };
 
   const handlePaginationChanges = (
     e: React.ChangeEvent<unknown>,
@@ -29,36 +36,23 @@ const UserManagement = () => {
     setCurrentPage(newPage);
   };
 
-  const handleSearchSubmit = React.useCallback((value: SearchModel) => {
-    setSearchKeyWord(value.searchValue ?? "");
+  const handleSearchSubmit = (value: SearchModel) => {
     setCurrentPage(1);
-  }, []);
+    getUsersList(value.searchValue ?? "");
+  };
 
   React.useEffect(() => {
-    callApi();
-  }, [callApi, searchKeyWord, currentPage]);
-
-  React.useEffect(() => {
-    context.setLoading(loading);
-  }, [loading, context]);
-
-  React.useEffect(() => {
-    if (data) {
-      setUsers(data.data.users);
-    }
-  }, [data]);
+    getUsersList("");
+  }, [currentPage]);
 
   return (
     <React.Fragment>
-      <Grid container spacing={2} pb={2}>
-        <Grid item xs={12} md={6}>
-          <SearchBar handleSubmit={handleSearchSubmit} />
-        </Grid>
-      </Grid>
+      <SearchBar handleSubmit={handleSearchSubmit} />
 
-      {!users.length && <Alert severity="info">{"No data found!"}</Alert>}
-
-      {users.length > 0 && (
+      {users && users.length < 1 && (
+        <Alert severity="error">{"No data found!"}</Alert>
+      )}
+      {users && users.length > 0 && (
         <Grid container spacing={2}>
           {users.map((user, index) => {
             return (

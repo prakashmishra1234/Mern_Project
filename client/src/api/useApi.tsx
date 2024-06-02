@@ -45,6 +45,7 @@ const useApi = (
         });
         setData(res.data);
       } catch (err: any) {
+        console.log(err.response.data);
         if (axios.isCancel(err)) {
           console.log("Request canceled", err.message);
         } else {
