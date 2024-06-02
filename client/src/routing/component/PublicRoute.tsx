@@ -6,6 +6,7 @@ const PublicRoute = (props: any) => {
   const context = useContext(AuthContext);
 
   if (!context.isUserVerifcationCompleted) return <></>;
+
   if (context.isUserVerifcationCompleted && !context.user)
     return <React.Fragment>{props.children}</React.Fragment>;
 
