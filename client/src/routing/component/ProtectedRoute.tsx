@@ -5,7 +5,8 @@ import { AuthContext } from "../../Store";
 const ProtectedRoute = (props: any) => {
   const context = useContext(AuthContext);
 
-  if (context.isUserVerified)
+  if (!context.isUserVerifcationCompleted) return <></>;
+  if (context.isUserVerifcationCompleted && context.user)
     return <React.Fragment>{props.children}</React.Fragment>;
 
   return <Navigate to="/login" />;

@@ -5,7 +5,7 @@ import { useContext } from "react";
 const Profile = () => {
   const context = useContext(AuthContext);
 
-  return <Box>{context.user.fullname}</Box>;
+  return <Box>{context?.user?.fullname ?? ""}</Box>;
 };
 
 export default Profile;

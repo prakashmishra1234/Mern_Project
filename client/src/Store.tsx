@@ -12,10 +12,8 @@ import { ToastMessageEnumType } from "./enum/ToastMessage";
 interface IContext {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isUserVerified: boolean;
-  setIsUserVerified: React.Dispatch<React.SetStateAction<boolean>>;
-  user: userType;
-  setUser: React.Dispatch<React.SetStateAction<userType>>;
+  isUserVerifcationCompleted: boolean;
+  user: userType | null;
   login: (value: AuthLogin) => void;
   logout: () => void;
   forgetPassword: (value: AuthForgetPassword) => void;
@@ -25,8 +23,7 @@ interface IContext {
 const AuthContext = React.createContext<IContext>({
   loading: false,
   setLoading: () => {},
-  isUserVerified: false,
-  setIsUserVerified: () => {},
+  isUserVerifcationCompleted: false,
   login: (value: AuthLogin): void => {},
   logout: (): void => {},
   forgetPassword: (value: AuthForgetPassword): void => {},
@@ -34,35 +31,16 @@ const AuthContext = React.createContext<IContext>({
     token: string | undefined,
     value: AuthChangePassword
   ): void => {},
-  user: {
-    _id: "",
-    username: "",
-    fullname: "",
-    email: "",
-    isVerified: false,
-    role: "",
-    createdAt: "",
-    __v: 0,
-  },
-  setUser: () => {},
+  user: null,
 });
 
 const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = React.useState(false);
-  const [isUserVerified, setIsUserVerified] = React.useState(false);
-  const [user, setUser] = React.useState({
-    _id: "",
-    username: "",
-    fullname: "",
-    email: "",
-    isVerified: false,
-    role: "",
-    createdAt: "",
-    __v: 0,
-  });
+  const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
+    React.useState(false);
+  const [user, setUser] = React.useState<userType | null>(null);
 
   const login = (value: AuthLogin): void => {
-    setIsUserVerified(false);
     setLoading(true);
     axios
       .post("/api/v1/login", value)
@@ -70,7 +48,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         getUserData();
       })
       .catch((err) => {
-        setIsUserVerified(false);
         getToastMessage({
           type: ToastMessageEnumType.error,
           messgae: err.response.data.message,
@@ -86,7 +63,8 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get("/api/v1/logout")
       .then((res) => {
-        setIsUserVerified(false);
+        console.log(res);
+        setUser(null);
       })
       .catch((err) => {
         getToastMessage({
@@ -105,13 +83,12 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       .get("/api/v1/me")
       .then((res) => {
         setUser(res.data.data as userType);
-        setIsUserVerified(true);
       })
       .catch((err) => {
         console.log(err);
-        setIsUserVerified(false);
       })
       .finally(() => {
+        setIsUserVerifcationCompleted(true);
         setLoading(false);
       });
   };
@@ -163,7 +140,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const value = document.cookie;
     const temp = value.split("=");
     if (temp[0] === "token") getUserData();
-    else setIsUserVerified(false);
+    else setIsUserVerifcationCompleted(true);
   }, []);
 
   return (
@@ -171,10 +148,8 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       value={{
         loading,
         setLoading,
-        isUserVerified,
-        setIsUserVerified,
+        isUserVerifcationCompleted,
         user,
-        setUser,
         login,
         logout,
         forgetPassword,

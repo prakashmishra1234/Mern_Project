@@ -111,7 +111,8 @@ const Navbar = () => {
                 </Link>
               </MenuItem>
             ))}
-            {context.user.role === "admin" &&
+            {context.user &&
+              context.user.role === "admin" &&
               adminPages.map((page) => (
                 <MenuItem key={page}>
                   <Link
@@ -155,7 +156,8 @@ const Navbar = () => {
               {page}
             </Link>
           ))}
-          {context.user.role === "admin" &&
+          {context.user &&
+            context.user.role === "admin" &&
             adminPages.map((page) => (
               <Link
                 style={{ textDecoration: "none", color: "black" }}

@@ -6,7 +6,7 @@ const AdminRoute = (props: any) => {
   const context = useContext(AuthContext);
   const location = useLocation();
 
-  if (context.user.role === "admin")
+  if (context?.user && context?.user.role === "admin")
     return <React.Fragment>{props.children}</React.Fragment>;
 
   const from = location.state?.from?.pathname || "/home";
