@@ -14,7 +14,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link, Outlet } from "react-router-dom";
-import { AuthContext } from "../../Store";
+import { AuthContext } from "../../../Store";
 
 const pages = ["Home"];
 const adminPages = ["Users"];
@@ -145,10 +145,19 @@ const Navbar = () => {
         >
           LOGO
         </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           {pages.map((page) => (
             <Link
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: "black",
+                marginRight: 12,
+              }}
               to={page.toLocaleLowerCase()}
               key={page}
               onClick={() => handleCloseNavMenu("page")}

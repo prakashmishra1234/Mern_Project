@@ -128,7 +128,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
 // get all user only for admin
 exports.getAllUser = catchAsyncError(async (req, res, next) => {
-  const resultPerPage = 2;
+  const resultPerPage = 10;
   const userCount = await User.countDocuments();
   const apiFeature = new ApiFeatures(User.find(), req.query)
     .search()
@@ -140,6 +140,5 @@ exports.getAllUser = catchAsyncError(async (req, res, next) => {
     resultPerPage,
     userCount,
   };
-  if (!users.length) return next(new ErrorHandler("Users not found.", 400));
   sendData(data, 200, res, "Users found successfully");
 });
