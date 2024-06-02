@@ -7,28 +7,20 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import CustomPagination from "../Components/common/Pagination";
 import SearchBar from "../Components/common/SearchBar";
 import { SearchModel } from "../type/SearchType";
+import useApi from "../api/useApi";
+import { ApiMethods } from "../enum/ApiMethods";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<UserType[] | null>(null);
+  const [searchKeyWord, setSearchKeyWord] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [users, setUsers] = React.useState<UserType[]>([]);
   const [totalPage, setTotalPage] = React.useState(0);
-
-  const getUsersList = (searchKeyWord: string) => {
-    context.setLoading(true);
-    axios
-      .get(`/api/v1/users?keyword=${searchKeyWord}&page=${currentPage}`)
-      .then((res: any) => {
-        setUsers(res.data.data.users);
-        setTotalPage(res.data.data.userCount / res.data.data.resultPerPage);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        context.setLoading(false);
-      });
-  };
+  const { data, error, loading, callApi } = useApi(
+    "/api/v1/users",
+    ApiMethods.GET,
+    { keyword: searchKeyWord, page: currentPage }
+  );
 
   const handlePaginationChanges = (
     e: React.ChangeEvent<unknown>,
@@ -37,13 +29,24 @@ const UserManagement = () => {
     setCurrentPage(newPage);
   };
 
-  const handleSearchSubmit = (value: SearchModel) => {
-    getUsersList(value.searchValue ?? "");
-  };
+  const handleSearchSubmit = React.useCallback((value: SearchModel) => {
+    setSearchKeyWord(value.searchValue ?? "");
+    setCurrentPage(1);
+  }, []);
 
   React.useEffect(() => {
-    getUsersList("");
-  }, [currentPage]);
+    callApi();
+  }, [callApi, searchKeyWord, currentPage]);
+
+  React.useEffect(() => {
+    context.setLoading(loading);
+  }, [loading, context]);
+
+  React.useEffect(() => {
+    if (data) {
+      setUsers(data.data.users);
+    }
+  }, [data]);
 
   return (
     <React.Fragment>
@@ -52,10 +55,10 @@ const UserManagement = () => {
           <SearchBar handleSubmit={handleSearchSubmit} />
         </Grid>
       </Grid>
-      {users && users.length < 1 && (
-        <Alert severity="error">{"No data found!"}</Alert>
-      )}
-      {users && users.length > 0 && (
+
+      {!users.length && <Alert severity="info">{"No data found!"}</Alert>}
+
+      {users.length > 0 && (
         <Grid container spacing={2}>
           {users.map((user, index) => {
             return (
