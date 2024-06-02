@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import {
   AuthForgetPassword,
   ForgotPasswordValidator,
-} from "../../utils/helper";
+} from "../../type/AuthType";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
 

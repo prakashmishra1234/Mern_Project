@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
-import { AuthSignUp, SignupValidator } from "../../utils/helper";
+import { AuthSignUp, SignupValidator } from "../../type/AuthType";
 import axios from "axios";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";

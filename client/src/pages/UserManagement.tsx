@@ -2,8 +2,7 @@ import axios from "axios";
 import React from "react";
 import { AuthContext } from "../Store";
 import { Alert, Card, Grid, Link, Typography } from "@mui/material";
-import { userType } from "../type/userType";
-import { formatDateTime } from "../utils/helper";
+import { UserType } from "../type/UserType";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CustomPagination from "../Components/common/Pagination";
 import SearchBar from "../Components/common/SearchBar";
@@ -11,7 +10,7 @@ import { SearchModel } from "../type/SearchType";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<userType[] | null>(null);
+  const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
 

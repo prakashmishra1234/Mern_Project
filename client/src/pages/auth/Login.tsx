@@ -1,20 +1,15 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
-import { AuthLogin, LoginValidator } from "../../utils/helper";
-import toast from "react-hot-toast";
+import { AuthLogin, LoginValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
-import useApi from "../../api/useApi";
-import { ApiMethods } from "../../enum/ApiMethods";
-import axios from "axios";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
-  const navigate = useNavigate();
 
   const HandleSubmit = (value: AuthLogin) => {
     context.login(value);

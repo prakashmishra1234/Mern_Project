@@ -1,11 +1,11 @@
 import * as React from "react";
-import { userType } from "./type/userType";
+import { UserType } from "./type/UserType";
 import axios from "axios";
 import {
   AuthChangePassword,
   AuthForgetPassword,
   AuthLogin,
-} from "./utils/helper";
+} from "./type/AuthType";
 import { getToastMessage } from "./Components/common/ToastMessage";
 import { ToastMessageEnumType } from "./enum/ToastMessage";
 
@@ -13,7 +13,7 @@ interface IContext {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isUserVerifcationCompleted: boolean;
-  user: userType | null;
+  user: UserType | null;
   login: (value: AuthLogin) => void;
   logout: () => void;
   forgetPassword: (value: AuthForgetPassword) => void;
@@ -38,7 +38,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = React.useState(false);
   const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
     React.useState(false);
-  const [user, setUser] = React.useState<userType | null>(null);
+  const [user, setUser] = React.useState<UserType | null>(null);
 
   const login = (value: AuthLogin): void => {
     setLoading(true);
@@ -63,7 +63,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get("/api/v1/logout")
       .then((res) => {
-        console.log(res);
         setUser(null);
       })
       .catch((err) => {
@@ -82,7 +81,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get("/api/v1/me")
       .then((res) => {
-        setUser(res.data.data as userType);
+        setUser(res.data.data as UserType);
       })
       .catch((err) => {
         console.log(err);
