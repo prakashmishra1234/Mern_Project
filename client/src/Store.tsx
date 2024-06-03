@@ -5,6 +5,7 @@ import {
   AuthChangePassword,
   AuthForgetPassword,
   AuthLogin,
+  AuthSignUp,
 } from "./type/AuthType";
 import { getToastMessage } from "./Components/common/ToastMessage";
 import { ToastMessageEnumType } from "./enum/ToastMessage";
@@ -15,6 +16,7 @@ interface IContext {
   isUserVerifcationCompleted: boolean;
   user: UserType | null;
   login: (value: AuthLogin) => void;
+  signUp: (value: AuthSignUp) => void;
   logout: () => void;
   forgetPassword: (value: AuthForgetPassword) => void;
   resetPassword: (token: string | undefined, value: AuthChangePassword) => void;
@@ -25,6 +27,7 @@ const AuthContext = React.createContext<IContext>({
   setLoading: () => {},
   isUserVerifcationCompleted: false,
   login: (value: AuthLogin): void => {},
+  signUp: (value: AuthSignUp): void => {},
   logout: (): void => {},
   forgetPassword: (value: AuthForgetPassword): void => {},
   resetPassword: (
@@ -45,6 +48,26 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setIsUserVerifcationCompleted(false);
     axios
       .post("/api/v1/login", value)
+      .then(async (res) => {
+        await getUserData();
+      })
+      .catch((err) => {
+        setIsUserVerifcationCompleted(true);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const signUp = (value: AuthSignUp): void => {
+    setLoading(true);
+    setIsUserVerifcationCompleted(false);
+    axios
+      .post("/api/v1/register", value)
       .then(async (res) => {
         await getUserData();
       })
@@ -153,6 +176,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         isUserVerifcationCompleted,
         user,
         login,
+        signUp,
         logout,
         forgetPassword,
         resetPassword,
