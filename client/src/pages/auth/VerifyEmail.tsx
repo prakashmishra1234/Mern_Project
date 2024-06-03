@@ -35,11 +35,11 @@ const VerifyEmail = () => {
     emailVerification();
   }, []);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      navigateToLogin();
-    }, 10000);
-  }, []);
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     navigateToLogin();
+  //   }, 10000);
+  // }, []);
 
   return (
     <Grid
@@ -57,18 +57,28 @@ const VerifyEmail = () => {
               m: { xs: 2, md: 0 },
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: { xs: "column", md: "row" },
             }}
-            elevation={3}
+            elevation={0}
           >
             {isSuccess ? (
-              <VerifiedIcon sx={{ color: "green" }} />
+              <VerifiedIcon sx={{ color: "green", mb: { xs: 2, md: 0 } }} />
             ) : (
-              <NewReleasesIcon sx={{ color: "red" }} />
+              <NewReleasesIcon sx={{ color: "red", mb: { xs: 2, md: 0 } }} />
             )}
-            <Typography fontWeight={700} color={isSuccess ? "black" : "red"}>
+            <Typography
+              fontWeight={700}
+              color={isSuccess ? "black" : "red"}
+              sx={{ mx: { xs: 0, md: 2 } }}
+            >
               {message}
             </Typography>
-            <Button size="small" onClick={navigateToLogin}>
+            <Button
+              size="small"
+              onClick={navigateToLogin}
+              sx={{ mt: { xs: 2, md: 0 } }}
+            >
               Ok
             </Button>
           </Paper>
