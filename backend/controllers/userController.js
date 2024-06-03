@@ -21,13 +21,23 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
 
 // Login User
 exports.loginUser = catchAsyncError(async (req, res, next) => {
+  const { token } = req.cookies;
+
+  if (token) {
+    return next(new ErrorHandler("User already signed in.", 400));
+  }
+
   const { username, password } = req.body;
 
   if (!username || !password) {
     return next(new ErrorHandler("Please enter username and password", 400));
   }
 
-  const user = await User.findOne({ username: username }).select("+password");
+  let user = await User.findOne({ username: username }).select("+password");
+
+  if (!user) {
+    user = await User.findOne({ email: username }).select("+password");
+  }
 
   if (!user) {
     return next(new ErrorHandler("Invalid username or password", 400));
