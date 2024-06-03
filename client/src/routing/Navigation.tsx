@@ -7,6 +7,7 @@ import PublicRoute from "./component/PublicRoute";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import VerifyEmail from "../pages/auth/VerifyEmail";
 import Navbar from "../Components/common/layout/Navbar";
 import Profile from "../pages/Profile";
 import UserManagement from "../pages/UserManagement";
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
         <ResetPassword />
       </PublicRoute>
     ),
+  },
+  {
+    path: "/verify-email/:token",
+    element: <VerifyEmail />,
   },
   {
     path: "*",

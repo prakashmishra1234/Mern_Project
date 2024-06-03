@@ -4,13 +4,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { AuthChangePassword, PasswordValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
-import axios from "axios";
-import toast from "react-hot-toast";
 
 const ResetPassword: React.FC = () => {
   const { token } = useParams();
   const context = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const handleSubmit = (value: AuthChangePassword) => {
     context.resetPassword(token, value);
