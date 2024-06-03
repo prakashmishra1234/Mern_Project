@@ -10,7 +10,11 @@ const {
   sendEmailVerificationLink,
   verifyEmail,
 } = require("../controllers/userController");
-const { isAuthenticateUser, authorizeRoles } = require("../middleware/auth");
+const {
+  isAuthenticateUser,
+  authorizeRoles,
+  verifiedUser,
+} = require("../middleware/auth");
 
 const router = express.Router();
 

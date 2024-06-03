@@ -26,3 +26,12 @@ exports.authorizeRoles = (...roles) => {
     next();
   };
 };
+
+exports.verifiedUser = catchAsyncError(async (req, res, next) => {
+  if (!req.user.isVerified) {
+    return next(
+      new ErrorHandler(`Please verify email to access this resource.`, 403)
+    );
+  }
+  next();
+});
