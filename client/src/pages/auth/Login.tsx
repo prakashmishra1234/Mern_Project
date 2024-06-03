@@ -51,7 +51,7 @@ const Login: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 name="username"
-                label="Username"
+                label="Username / email"
                 size="small"
                 margin="dense"
                 autoFocus

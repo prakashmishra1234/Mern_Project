@@ -7,6 +7,8 @@ const {
   forgetPassword,
   resetPassword,
   getAllUser,
+  sendEmailVerificationLink,
+  verifyEmail,
 } = require("../controllers/userController");
 const { isAuthenticateUser, authorizeRoles } = require("../middleware/auth");
 
@@ -17,6 +19,10 @@ router.route("/login").post(loginUser);
 router.route("/forgetPassword").post(forgetPassword);
 router.route("/resetPassword/:token").put(resetPassword);
 router.route("/logout").get(isAuthenticateUser, logoutUser);
+router
+  .route("/emailVerification")
+  .get(isAuthenticateUser, sendEmailVerificationLink);
+router.route("/verifyEmail/:token").get(verifyEmail);
 router.route("/me").get(isAuthenticateUser, getUserDetails);
 router
   .route("/users")

@@ -52,6 +52,7 @@ const UserManagement = () => {
       {users && users.length < 1 && (
         <Alert severity="error">{"No data found!"}</Alert>
       )}
+
       {users && users.length > 0 && (
         <Grid container spacing={2}>
           {users.map((user, index) => {

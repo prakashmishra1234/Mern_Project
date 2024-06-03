@@ -16,7 +16,32 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     email,
     password,
   });
-  sendToken(user, 201, res, "User registered successfully");
+
+  // send verification mail.
+  const verificationToken = user.getEmailVerificationToken();
+  await user.save({ validateBeforeSave: false });
+  const emailVerificationUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/verify-email/${verificationToken}`;
+  const message = `Your email verification link is :- <br/><br/> <a href="${emailVerificationUrl}">click here to verify your email</a> <br/><br/> If you have not requested this email then, please ignore it.`;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `Mern_Project Email Verification`,
+      message,
+    });
+  } catch (error) {
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(new ErrorHandler(error.message, 500));
+  }
+  sendToken(
+    user,
+    201,
+    res,
+    "User registered successfully. Please verify your email."
+  );
 });
 
 // Login User
@@ -152,4 +177,69 @@ exports.getAllUser = catchAsyncError(async (req, res, next) => {
     userCount,
   };
   sendData(data, 200, res, "Users found successfully");
+});
+
+//send email verification link
+exports.sendEmailVerificationLink = catchAsyncError(async (req, res, next) => {
+  const user = req.user;
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 400));
+  }
+
+  if (req.user.isVerified) {
+    return next(new ErrorHandler("User already verified", 400));
+  }
+
+  // Get email verificartion token
+  const verificationToken = user.getEmailVerificationToken();
+  await user.save({ validateBeforeSave: false });
+  const emailVerificationUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/verify-email/${verificationToken}`;
+  const message = `Your email verification link is :- <br/><br/> <a href="${emailVerificationUrl}">click here to verify your email</a> <br/><br/> If you have not requested this email then, please ignore it.`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `Mern_Project Email Verification`,
+      message,
+    });
+    sendData(null, 200, res, "Email verification mail sent successfully.");
+  } catch (error) {
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// verify email
+exports.verifyEmail = catchAsyncError(async (req, res, next) => {
+  // creating token hash
+  const emailVerificationToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    emailVerificationToken,
+    emailVerificationExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(
+      new ErrorHandler(
+        "Email verification token is invalid or has been expired",
+        400
+      )
+    );
+  }
+
+  user.isVerified = true;
+  user.emailVerificationToken = undefined;
+  user.emailVerificationExpire = undefined;
+
+  await user.save();
+  sendToken(user, 200, res, "Email verified successfully successfully");
 });
