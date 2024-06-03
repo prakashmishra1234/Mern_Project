@@ -42,12 +42,14 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const login = (value: AuthLogin): void => {
     setLoading(true);
+    setIsUserVerifcationCompleted(false);
     axios
       .post("/api/v1/login", value)
-      .then((res) => {
-        getUserData();
+      .then(async (res) => {
+        await getUserData();
       })
       .catch((err) => {
+        setIsUserVerifcationCompleted(true);
         getToastMessage({
           type: ToastMessageEnumType.error,
           messgae: err.response.data.message,
