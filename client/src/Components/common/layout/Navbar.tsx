@@ -217,7 +217,6 @@ const Navbar = () => {
           </Menu>
         </Box>
       </Toolbar>
-      <Outlet />
     </Container>
   );
 };

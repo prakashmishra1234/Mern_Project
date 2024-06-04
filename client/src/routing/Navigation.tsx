@@ -8,17 +8,17 @@ import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
 import VerifyEmail from "../pages/auth/VerifyEmail";
-import Navbar from "../Components/common/layout/Navbar";
 import Profile from "../pages/Profile";
 import UserManagement from "../pages/UserManagement";
 import AdminRoute from "./component/AdminRoute";
+import MainLayout from "../Components/common/layout/MainLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <Navbar />
+        <MainLayout />
       </ProtectedRoute>
     ),
     children: [
