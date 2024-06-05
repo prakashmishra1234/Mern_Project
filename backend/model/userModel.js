@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter username"],
     unique: true,
-    maxlength: [20, "Username can not exceed 20 characters"],
+    maxlength: [50, "Username can not exceed 20 characters"],
     minlength: [4, "Username should have more than 4 characters"],
   },
   fullname: {
@@ -28,23 +28,11 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Please enter your password"],
-    minlength: [8, "Password should contain minimum 8 character"],
     select: false,
   },
   isVerified: {
     type: Boolean,
     default: false,
-  },
-  avatar: {
-    public_id: {
-      type: String,
-      required: false,
-    },
-    url: {
-      type: String,
-      required: false,
-    },
   },
   role: {
     type: String,
@@ -54,6 +42,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  picture: String,
+  googleId: String,
+  provider: String,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   emailVerificationToken: String,

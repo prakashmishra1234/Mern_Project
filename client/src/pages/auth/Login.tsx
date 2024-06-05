@@ -16,6 +16,10 @@ const Login: React.FC = () => {
     context.login(value);
   };
 
+  const loginWithGoogle = () => {
+    context.loginWithGoogle();
+  };
+
   const formik = useFormik({
     initialValues: LoginValidator.initials,
     validationSchema: LoginValidator.validation,
@@ -97,6 +101,7 @@ const Login: React.FC = () => {
           <Button
             variant="outlined"
             size="small"
+            onClick={loginWithGoogle}
             fullWidth
             sx={{ display: "flex", justifyContent: "flex-start" }}
           >

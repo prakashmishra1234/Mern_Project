@@ -6,10 +6,19 @@ const sendToken = require("../utils/jwtTokens");
 const sendData = require("../utils/sendData");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const axios = require("axios");
 
 // Register User
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { username, fullname, email, password } = req.body;
+
+  if (!password) return next(new ErrorHandler("User already signed in.", 400));
+
+  if (password.length !== 8)
+    return next(
+      new ErrorHandler("Password should contain minimum 8 character", 400)
+    );
+
   const user = await User.create({
     username,
     fullname,
@@ -242,4 +251,60 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
 
   await user.save();
   sendToken(user, 200, res, "Email verified successfully successfully");
+});
+
+// login with google
+exports.loginWithGoogle = catchAsyncError(async (req, res, next) => {
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email`;
+  url;
+  sendData(url, 200, res, "Email verification mail sent successfully.");
+});
+
+// login with google response
+exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
+  const { code } = req.query;
+  try {
+    const { data } = await axios.post("https://oauth2.googleapis.com/token", {
+      client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+      client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+      code,
+      redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+      grant_type: "authorization_code",
+    });
+
+    const { access_token } = data;
+
+    const { data: profile } = await axios.get(
+      "https://www.googleapis.com/oauth2/v1/userinfo",
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
+      }
+    );
+    const { id, email, verified_email, name, picture } = profile;
+
+    let user = await User.findOne({ email: email });
+
+    if (user) {
+      user.isVerified = verified_email;
+      user.picture = picture;
+      user.googleId = id;
+      user.provider = "google";
+    } else {
+      user = await User.create({
+        username: id,
+        fullname: name,
+        email: email,
+        isVerified: verified_email,
+        picture: picture,
+        googleId: id,
+        provider: "google",
+      });
+    }
+
+    await user.save({ validateBeforeSave: false });
+
+    sendToken(user, 201, res, "User logged in successfully.");
+  } catch (error) {
+    console.error("Error:", error);
+  }
 });
