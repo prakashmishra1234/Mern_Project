@@ -12,6 +12,7 @@ import Profile from "../pages/Profile";
 import UserManagement from "../pages/UserManagement";
 import AdminRoute from "./component/AdminRoute";
 import MainLayout from "../Components/common/layout/MainLayout";
+import AuthLayout from "../Components/common/layout/AuthLayout";
 
 const router = createBrowserRouter([
   {
@@ -41,37 +42,32 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "/",
     element: (
       <PublicRoute>
-        <Login />
+        <AuthLayout />
       </PublicRoute>
     ),
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "reset-password/:token",
+        element: <ResetPassword />,
+      },
+    ],
   },
-  {
-    path: "/register",
-    element: (
-      <PublicRoute>
-        <Register />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: "/forgot-password",
-    element: (
-      <PublicRoute>
-        <ForgotPassword />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: "/reset-password/:token",
-    element: (
-      <PublicRoute>
-        <ResetPassword />
-      </PublicRoute>
-    ),
-  },
+
   {
     path: "/verify-email/:token",
     element: <VerifyEmail />,

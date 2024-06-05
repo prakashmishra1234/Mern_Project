@@ -111,11 +111,6 @@ const UserManagement = () => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} pt={1}>
-                    <Grid item xs={12} textAlign={"right"}>
-                      <Link sx={{ cursor: "pointer" }}>Edit</Link>
-                    </Grid>
-                  </Grid>
                 </Card>
               </Grid>
             );
