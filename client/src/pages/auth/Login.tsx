@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { AuthLogin, LoginValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
 import { Paper, TextField, Typography } from "@mui/material";
+import backgorundImageForAuthComp from "../../assets/backgorundImageForAuthComp.jpeg";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
@@ -30,8 +31,9 @@ const Login: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background:
-          " linear-gradient(0deg, rgba(34,193,195,1) 27%, rgba(45,129,253,1) 71%)",
+        backgroundImage: `url(${backgorundImageForAuthComp})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
       }}
     >
       <Box
@@ -41,11 +43,20 @@ const Login: React.FC = () => {
         m={3}
         width={{ sm: "45%", md: "35%", xs: "100%" }}
       >
-        <Paper elevation={3} sx={{ padding: "0.8rem", borderRadius: "1rem" }}>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: "0.8rem",
+            borderRadius: "1rem",
+            boxShadow: "0 0 40px rgba(8,7,16,0.6)",
+            backdropFilter: "blur(8px)",
+            backgroundColor: "rgba(255,255,255,0.13)",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
-                Welcome Back
+                Login
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -96,7 +107,7 @@ const Login: React.FC = () => {
                 type="submit"
                 fullWidth
                 size="small"
-                variant="contained"
+                variant="outlined"
               >
                 Login
               </Button>
