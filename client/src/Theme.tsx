@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEY } from "./constant";
 
 const primary = {
   main: "#fff",
-  dark: "",
+  dark: "#000",
   light: "",
 };
 
@@ -25,7 +25,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         h4: {
-          color: primary.main,
+          color: primary.dark,
         },
       },
     },
@@ -34,7 +34,7 @@ const theme = createTheme({
         root: {
           backgroundColor: primary.main,
           "& label.Mui-focused": {
-            color: secondary.main,
+            // color: secondary.main,
           },
         },
       },
@@ -43,7 +43,7 @@ const theme = createTheme({
     MuiSelect: {
       styleOverrides: {
         filled: {
-          backgroundColor: primary.main,
+          // backgroundColor: primary.main,
         },
       },
     },

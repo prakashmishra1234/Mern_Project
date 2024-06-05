@@ -6,8 +6,8 @@ import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { AuthLogin, LoginValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
-import { Paper, TextField, Typography } from "@mui/material";
-import backgorundImageForAuthComp from "../../assets/backgorundImageForAuthComp.jpeg";
+import { IconButton, TextField, Typography } from "@mui/material";
+import GoogleIcon from "../../assets/GoogleIcon.png";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
@@ -73,6 +73,14 @@ const Login: React.FC = () => {
               formik.touched.password && (formik.errors.password as string)
             }
           />
+          <Typography textAlign={"end"}>
+            <Link
+              style={{ textDecoration: "none", color: "#000" }}
+              to="/forgot-password"
+            >
+              Forgot password?
+            </Link>
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -85,11 +93,31 @@ const Login: React.FC = () => {
             Login
           </Button>
         </Grid>
-        <Grid item xs={12} textAlign={"center"}>
-          <Link to="/forgot-password">Forgot password?</Link>
+        <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            size="small"
+            fullWidth
+            sx={{ display: "flex", justifyContent: "flex-start" }}
+          >
+            <Box
+              component={"img"}
+              src={GoogleIcon}
+              height={"1.7rem"}
+              width={"1.7rem"}
+            />
+            <Typography width={"100%"} textAlign={"center"}>
+              Login with google
+            </Typography>
+          </Button>
         </Grid>
         <Grid item xs={12} textAlign={"center"}>
-          <Link to="/register">Don't have account? signup!</Link>
+          <Link
+            style={{ textDecoration: "none", color: "#000" }}
+            to="/register"
+          >
+            Don't have account? signup!
+          </Link>
         </Grid>
       </Grid>
     </Box>
