@@ -308,3 +308,79 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });
+
+// Send OTP
+exports.sendOtp = catchAsyncError(async (req, res, next) => {
+  const { token } = req.cookies;
+
+  if (token) {
+    return next(new ErrorHandler("User already signed in.", 400));
+  }
+
+  const { email, username } = req.query;
+
+  if (!email && !username) {
+    return next(new ErrorHandler("Please enter email or username.", 400));
+  }
+
+  let user;
+
+  if (email) {
+    user = await User.findOne({ email: email });
+  }
+
+  if (username) {
+    user = await User.findOne({ username: username });
+  }
+
+  if (!user) {
+    return next(new ErrorHandler("User not found with this details.", 400));
+  }
+
+  const verificationOtp = user.getEmailVerificationOtp();
+  await user.save({ validateBeforeSave: false });
+  const message = `Otp for signing in is :- ${verificationOtp} <br/><br/> If you have not requested this email then, please ignore it.`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `Mern_Project Otp Validation`,
+      message,
+    });
+    sendData(null, 200, res, "Otp has been sent to your registered email.");
+  } catch (error) {
+    user.emailVerificationOtp = undefined;
+    user.emailVerificationOtpExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// verify otp
+exports.verifyOtp = catchAsyncError(async (req, res, next) => {
+  const { email, otp, username } = req.body;
+  let user;
+  if (email) {
+    user = await User.findOne({
+      email: email,
+      emailVerificationOtp: otp,
+      emailVerificationOtpExpire: { $gt: Date.now() },
+    });
+  }
+
+  if (username) {
+    user = await User.findOne({
+      username: username,
+      emailVerificationOtpExpire: { $gt: Date.now() },
+    });
+  }
+
+  if (!user) {
+    return next(new ErrorHandler("Otp is invalid or has been expired", 400));
+  }
+
+  user.emailVerificationOtp = undefined;
+  user.emailVerificationOtpExpire = undefined;
+  await user.save({ validateBeforeSave: false });
+  sendToken(user, 200, res, "User logged in successfully");
+});

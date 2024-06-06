@@ -11,16 +11,19 @@ const {
   verifyEmail,
   loginWithGoogle,
   loginWithGoogleRes,
+  sendOtp,
+  verifyOtp,
 } = require("../controllers/userController");
 const { isAuthenticateUser, authorizeRoles } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.route("/register").post(registerUser);
+router.route("/sendotp").get(sendOtp);
+router.route("/verifyOtp").post(verifyOtp);
 router.route("/auth/google").get(loginWithGoogle);
 router.route("/auth/google/callback").get(loginWithGoogleRes);
 router.route("/login").post(loginUser);
-
 router.route("/forgetPassword").post(forgetPassword);
 router.route("/resetPassword/:token").put(resetPassword);
 router.route("/logout").get(isAuthenticateUser, logoutUser);

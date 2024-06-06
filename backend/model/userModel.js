@@ -49,6 +49,8 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
   emailVerificationToken: String,
   emailVerificationExpire: Date,
+  emailVerificationOtp: String,
+  emailVerificationOtpExpire: Date,
 });
 
 //Password Hashing
@@ -93,6 +95,14 @@ userSchema.methods.getEmailVerificationToken = function () {
     .digest("hex");
   this.emailVerificationExpire = Date.now() + 15 * 60 * 1000;
   return verificationToken;
+};
+
+//Generating email verification Token
+userSchema.methods.getEmailVerificationOtp = function () {
+  const verificationOtp = "1234";
+  this.emailVerificationOtp = verificationOtp;
+  this.emailVerificationOtpExpire = Date.now() + 10 * 60 * 1000;
+  return verificationOtp;
 };
 
 module.exports = mongoose.model("User", userSchema);
