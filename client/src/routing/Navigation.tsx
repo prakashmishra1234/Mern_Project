@@ -7,6 +7,7 @@ import PublicRoute from "./component/PublicRoute";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import GoogleCallBack from "../pages/auth/GoogleCallBack";
 import VerifyEmail from "../pages/auth/VerifyEmail";
 import Profile from "../pages/Profile";
 import UserManagement from "../pages/UserManagement";
@@ -66,6 +67,14 @@ const router = createBrowserRouter([
         element: <ResetPassword />,
       },
     ],
+  },
+  {
+    path: "/auth/google/callback",
+    element: (
+      <PublicRoute>
+        <GoogleCallBack />
+      </PublicRoute>
+    ),
   },
 
   {

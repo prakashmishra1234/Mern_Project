@@ -17,6 +17,7 @@ interface IContext {
   user: UserType | null;
   login: (value: AuthLogin) => void;
   loginWithGoogle: () => void;
+  loginWithGoogleResp: (code: string) => void;
   signUp: (value: AuthSignUp) => void;
   logout: () => void;
   forgetPassword: (value: AuthForgetPassword) => void;
@@ -29,6 +30,7 @@ const AuthContext = React.createContext<IContext>({
   isUserVerifcationCompleted: false,
   login: (value: AuthLogin): void => {},
   loginWithGoogle: (): void => {},
+  loginWithGoogleResp: (code: string): void => {},
   signUp: (value: AuthSignUp): void => {},
   logout: (): void => {},
   forgetPassword: (value: AuthForgetPassword): void => {},
@@ -74,6 +76,26 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const loginWithGoogleResp = (code: string): void => {
+    setLoading(true);
+    setIsUserVerifcationCompleted(false);
+    axios
+      .get(`/api/v1/auth/google/callback?code=${code}`)
+      .then(async (res) => {
+        await getUserData();
+      })
+      .catch((err) => {
+        setIsUserVerifcationCompleted(true);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -194,6 +216,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         user,
         login,
         loginWithGoogle,
+        loginWithGoogleResp,
         signUp,
         logout,
         forgetPassword,

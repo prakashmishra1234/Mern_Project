@@ -255,7 +255,7 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
 
 // login with google
 exports.loginWithGoogle = catchAsyncError(async (req, res, next) => {
-  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email`;
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email&prompt=select_account`;
   url;
   sendData(url, 200, res, "Email verification mail sent successfully.");
 });
@@ -305,6 +305,6 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
 
     sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
-    console.error("Error:", error);
+    return next(new ErrorHandler("Something went wrong.", 400));
   }
 });
