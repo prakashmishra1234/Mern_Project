@@ -26,11 +26,15 @@ export type AuthSignUp = yup.InferType<typeof SignupValidator.validation>;
 export const LoginValidator = {
   initials: {
     username: "",
+    email: "",
+    otp: "",
     password: "",
   },
   validation: yup.object().shape({
-    username: yup.string().required("Email is required"),
-    password: yup.string().required("Password is required"),
+    username: yup.string().required("Username is required"),
+    password: yup.string().required("Password is required."),
+    otp: yup.string().required("Otp is required."),
+    email: yup.string().required("Email is required."),
   }),
 };
 

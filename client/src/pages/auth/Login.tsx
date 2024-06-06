@@ -8,12 +8,28 @@ import { AuthLogin, LoginValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
 import { Icon, TextField, Typography } from "@mui/material";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
+import SwipeableViews from "react-swipeable-views";
+import PasswordForm from "../../Components/others/PasswordForm";
+import OtpForm from "../../Components/others/OtpForm";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
+  const [index, setIndex] = React.useState(0);
+
+  const navigateToEmailForm = () => {
+    setIndex(0);
+  };
+
+  const navigateToPasswordForm = () => {
+    setIndex(1);
+  };
+
+  const navigateToOtpForm = () => {
+    setIndex(2);
+  };
 
   const HandleSubmit = (value: AuthLogin) => {
-    context.login(value);
+    console.log(value);
   };
 
   const loginWithGoogle = () => {
@@ -28,73 +44,67 @@ const Login: React.FC = () => {
   });
 
   return (
-    <Box
-      id="LoginUserForm"
-      component="form"
-      onSubmit={formik.handleSubmit}
-      m={3}
-    >
+    <Box m={3}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
-            Login
+            Sign In
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            name="username"
-            label="Username / email"
-            size="small"
-            margin="dense"
-            autoFocus
-            fullWidth
-            variant="outlined"
-            autoComplete="off"
-            id="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            error={formik.touched.username && Boolean(formik.errors.username)}
-            helperText={
-              formik.touched.username && (formik.errors.username as string)
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            name="password"
-            label="Password"
-            size="small"
-            margin="dense"
-            fullWidth
-            variant="outlined"
-            autoComplete="off"
-            id="password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={
-              formik.touched.password && (formik.errors.password as string)
-            }
-          />
-          <Typography textAlign={"end"}>
-            <Link
-              style={{ textDecoration: "none", color: "#000" }}
-              to="/forgot-password"
+          <SwipeableViews
+            index={index}
+            containerStyle={{ alignItems: "center" }}
+          >
+            <Box
+              id="LoginUserForm"
+              component="form"
+              onSubmit={formik.handleSubmit}
             >
-              Forgot password?
-            </Link>
-          </Typography>
+              <TextField
+                name="username"
+                label="Username / email"
+                size="small"
+                margin="dense"
+                autoFocus
+                fullWidth
+                variant="outlined"
+                autoComplete="off"
+                id="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.username && Boolean(formik.errors.username)
+                }
+                helperText={
+                  formik.touched.username && (formik.errors.username as string)
+                }
+              />
+            </Box>
+            <PasswordForm formik={formik} />
+            <OtpForm formik={formik} />
+          </SwipeableViews>
         </Grid>
         <Grid item xs={12}>
           <Button
-            form="LoginUserForm"
-            type="submit"
             fullWidth
             size="small"
-            variant="outlined"
+            type="submit"
+            variant="contained"
+            onClick={navigateToPasswordForm}
           >
-            Login
+            Sign in With Password
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            fullWidth
+            size="small"
+            variant="contained"
+            type="submit"
+            onClick={navigateToOtpForm}
+          >
+            Sign in With Otp
           </Button>
         </Grid>
         <Grid item xs={12}>
