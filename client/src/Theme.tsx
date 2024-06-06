@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEY } from "./constant";
 
 const primary = {
   main: "#fff",
-  dark: "#000",
+  dark: "#fff",
   light: "",
 };
 

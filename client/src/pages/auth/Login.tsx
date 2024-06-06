@@ -6,8 +6,8 @@ import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { AuthLogin, LoginValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
-import { IconButton, TextField, Typography } from "@mui/material";
-import GoogleIcon from "../../assets/GoogleIcon.png";
+import { Icon, TextField, Typography } from "@mui/material";
+import GoogleIcon from "../../assets/GoogleIcon.svg";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
@@ -99,21 +99,15 @@ const Login: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Button
-            variant="outlined"
+            fullWidth
             size="small"
             onClick={loginWithGoogle}
-            fullWidth
-            sx={{ display: "flex", justifyContent: "flex-start" }}
+            variant="contained"
           >
-            <Box
-              component={"img"}
-              src={GoogleIcon}
-              height={"1.7rem"}
-              width={"1.7rem"}
-            />
-            <Typography width={"100%"} textAlign={"center"}>
-              Login with google
-            </Typography>
+            <Icon sx={{ display: "flex" }}>
+              <img alt="" src={GoogleIcon} />
+            </Icon>
+            Sign in With Google
           </Button>
         </Grid>
         <Grid item xs={12} textAlign={"center"}>

@@ -6,13 +6,18 @@ import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { AuthSignUp, SignupValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
-import { TextField, Typography } from "@mui/material";
+import { Icon, TextField, Typography } from "@mui/material";
+import GoogleIcon from "../../assets/GoogleIcon.svg";
 
 const Register: React.FC = () => {
   const context = React.useContext(AuthContext);
 
   const handleSubmit = (value: AuthSignUp) => {
     context.signUp(value);
+  };
+
+  const loginWithGoogle = () => {
+    context.loginWithGoogle();
   };
 
   const formik = useFormik({
@@ -119,6 +124,19 @@ const Register: React.FC = () => {
             variant="outlined"
           >
             Sign Up
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            fullWidth
+            size="small"
+            onClick={loginWithGoogle}
+            variant="contained"
+          >
+            <Icon sx={{ display: "flex" }}>
+              <img alt="" src={GoogleIcon} />
+            </Icon>
+            Sign in With Google
           </Button>
         </Grid>
         <Grid item xs={12} textAlign="center">
