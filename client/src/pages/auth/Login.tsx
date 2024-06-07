@@ -40,7 +40,7 @@ const Login: React.FC = () => {
   });
 
   return (
-    <React.Fragment>
+    <Box m={2}>
       <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
         Sign In
       </Typography>
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
           navigateToPasswordForm={navigateToPasswordForm}
         />
       </SwipeableViews>
-    </React.Fragment>
+    </Box>
   );
 };
 

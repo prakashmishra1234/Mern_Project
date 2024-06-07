@@ -25,7 +25,7 @@ const ResetPassword: React.FC = () => {
       component="form"
       id="ResetPasswordForm"
       onSubmit={formik.handleSubmit}
-      m={3}
+      m={4}
     >
       <Typography
         variant="h4"

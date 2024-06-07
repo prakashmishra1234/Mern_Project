@@ -32,7 +32,7 @@ const Register: React.FC = () => {
       id="RegisterUserForm"
       component="form"
       onSubmit={formik.handleSubmit}
-      m={3}
+      m={4}
     >
       <Typography
         variant="h4"

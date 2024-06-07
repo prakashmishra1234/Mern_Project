@@ -26,7 +26,7 @@ const ForgotPassword: React.FC = () => {
       component="form"
       id="ForgotPasswordForm"
       onSubmit={formik.handleSubmit}
-      m={2}
+      m={4}
     >
       <Typography
         variant="h4"

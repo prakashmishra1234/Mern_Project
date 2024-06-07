@@ -26,7 +26,7 @@ const AuthLayout = () => {
           backdropFilter: "blur(8px)",
           backgroundColor: "rgba(255,255,255,0.13)",
           width: { sm: "45%", md: "30%", xs: "100%" },
-          p: 3,
+          m: 3,
         }}
       >
         <Outlet />
