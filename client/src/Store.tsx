@@ -79,7 +79,10 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get(url)
       .then(async (res) => {
-        await getUserData();
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: res.data.message,
+        });
       })
       .catch((err) => {
         getToastMessage({
