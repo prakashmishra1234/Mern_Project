@@ -29,12 +29,14 @@ export const LoginValidator = {
     email: "",
     otp: "",
     password: "",
+    isPassword: true,
   },
   validation: yup.object().shape({
-    username: yup.string().required("Username is required"),
+    username: yup.string(),
     password: yup.string().required("Password is required."),
-    otp: yup.string().required("Otp is required."),
-    email: yup.string().required("Email is required."),
+    otp: yup.string().required("Otp is required.").nullable(),
+    email: yup.string(),
+    isPassword: yup.boolean(),
   }),
 };
 

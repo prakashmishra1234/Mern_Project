@@ -21,6 +21,7 @@ const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+
   return (
     <Box m={2}>
       <TextField
@@ -33,7 +34,11 @@ const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
         variant="standard"
         autoComplete="off"
         id="username"
-        value={formik.values.username}
+        value={
+          formik.values.username !== ""
+            ? formik.values.username
+            : formik.values.email
+        }
         onChange={formik.handleChange}
         error={formik.touched.username && Boolean(formik.errors.username)}
         helperText={

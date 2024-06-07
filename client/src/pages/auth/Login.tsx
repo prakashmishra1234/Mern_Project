@@ -11,6 +11,7 @@ import SwipeableViews from "react-swipeable-views";
 import PasswordForm from "../../Components/others/PasswordForm";
 import OtpForm from "../../Components/others/OtpForm";
 import EmailForm from "../../Components/others/EmailForm";
+import { matchEmailSchema } from "../../utils/helper";
 
 const Login: React.FC = () => {
   const context = React.useContext(AuthContext);
@@ -21,10 +22,22 @@ const Login: React.FC = () => {
   };
 
   const navigateToPasswordForm = () => {
-    setIndex(1);
+    if (formik.values.email !== "" || formik.values.username !== "") {
+      formik.setFieldValue("isPassword", true);
+      const temp: boolean = matchEmailSchema(formik.values.username);
+      if (temp) {
+        formik.setFieldValue("email", formik.values.username);
+        formik.setFieldValue("username", "");
+      }
+      setIndex(1);
+    } else {
+      formik.setTouched({ ...formik.touched, username: true });
+    }
   };
 
-  const navigateToOtpForm = () => {
+  const navigateToOtpForm = (value: AuthLogin) => {
+    formik.setFieldValue("isPassword", false);
+    context.sendOtp(value);
     setIndex(2);
   };
 

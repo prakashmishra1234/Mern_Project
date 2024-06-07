@@ -9,6 +9,7 @@ import {
 import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
+import { AuthLogin } from "../../type/AuthType";
 
 interface IOtpForm {
   formik: any;
@@ -25,6 +26,9 @@ const OtpForm: React.FC<IOtpForm> = ({
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+  const loginWithOtp = (values: AuthLogin) => {
+    context.loginWithOtp(values);
+  };
   return (
     <Box m={2}>
       <TextField
@@ -38,7 +42,11 @@ const OtpForm: React.FC<IOtpForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
-        value={formik.values.username}
+        value={
+          formik.values.username !== ""
+            ? formik.values.username
+            : formik.values.email
+        }
         onChange={formik.handleChange}
         error={formik.touched.username && Boolean(formik.errors.username)}
         helperText={
@@ -76,6 +84,7 @@ const OtpForm: React.FC<IOtpForm> = ({
         size="small"
         type="submit"
         variant="contained"
+        onClick={() => loginWithOtp(formik.values)}
       >
         Continue
       </Button>

@@ -10,11 +10,12 @@ import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
+import { AuthLogin } from "../../type/AuthType";
 
 interface IPasswordForm {
   formik: any;
   onEditClick: () => void;
-  navigateToOtpForm: () => void;
+  navigateToOtpForm: (value: AuthLogin) => void;
 }
 
 const PasswordForm: React.FC<IPasswordForm> = ({
@@ -27,6 +28,11 @@ const PasswordForm: React.FC<IPasswordForm> = ({
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+
+  const loginWithPassword = (values: AuthLogin) => {
+    context.login(values);
+  };
+
   return (
     <Box m={2}>
       <TextField
@@ -40,7 +46,11 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
-        value={formik.values.username}
+        value={
+          formik.values.username !== ""
+            ? formik.values.username
+            : formik.values.email
+        }
         onChange={formik.handleChange}
         error={formik.touched.username && Boolean(formik.errors.username)}
         helperText={
@@ -88,7 +98,13 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         </Link>
       </Box>
 
-      <Button fullWidth size="small" type="submit" variant="contained">
+      <Button
+        fullWidth
+        size="small"
+        type="submit"
+        variant="contained"
+        onClick={() => loginWithPassword(formik.values)}
+      >
         Continue
       </Button>
       <Box
@@ -109,7 +125,7 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         size="small"
         variant="contained"
         type="submit"
-        onClick={navigateToOtpForm}
+        onClick={() => navigateToOtpForm(formik.values)}
         sx={{ marginBottom: "1rem" }}
       >
         Sign in With Otp
