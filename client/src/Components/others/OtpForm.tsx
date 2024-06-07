@@ -45,6 +45,7 @@ const OtpForm: React.FC<IOtpForm> = ({
           formik.touched.username && (formik.errors.username as string)
         }
         InputProps={{
+          readOnly: true,
           endAdornment: (
             <Typography sx={{ cursor: "pointer" }} onClick={onEditClick}>
               Edit
