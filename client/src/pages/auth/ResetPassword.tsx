@@ -27,70 +27,66 @@ const ResetPassword: React.FC = () => {
       onSubmit={formik.handleSubmit}
       m={3}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
-            Reset Password
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            name="password"
-            label="Password"
-            size="small"
-            margin="dense"
-            fullWidth
-            autoFocus
-            type="password"
-            variant="outlined"
-            autoComplete="off"
-            id="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={
-              formik.touched.password && (formik.errors.password as string)
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            name="confirmPassword"
-            label="Confirm Password"
-            size="small"
-            margin="dense"
-            fullWidth
-            autoFocus
-            variant="outlined"
-            autoComplete="off"
-            id="confirmPassword"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.confirmPassword &&
-              Boolean(formik.errors.confirmPassword)
-            }
-            helperText={
-              formik.touched.confirmPassword &&
-              (formik.errors.confirmPassword as string)
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            form="ResetPasswordForm"
-            type="submit"
-            fullWidth
-            size="small"
-            variant="outlined"
-          >
-            Reset Password
-          </Button>
-        </Grid>
-        <Grid item xs={12} textAlign={"center"}>
-          <Link to="/login">Back to login</Link>
-        </Grid>
-      </Grid>
+      <Typography
+        variant="h4"
+        fontSize={"small"}
+        textAlign={"center"}
+        sx={{ marginBottom: "1rem" }}
+      >
+        Reset Password
+      </Typography>
+
+      <TextField
+        name="password"
+        label="Password"
+        size="small"
+        margin="dense"
+        fullWidth
+        autoFocus
+        type="password"
+        variant="standard"
+        autoComplete="off"
+        id="password"
+        value={formik.values.password}
+        onChange={formik.handleChange}
+        error={formik.touched.password && Boolean(formik.errors.password)}
+        helperText={
+          formik.touched.password && (formik.errors.password as string)
+        }
+        sx={{ marginBottom: "1rem" }}
+      />
+      <TextField
+        name="confirmPassword"
+        label="Confirm Password"
+        size="small"
+        margin="dense"
+        fullWidth
+        autoFocus
+        variant="standard"
+        autoComplete="off"
+        id="confirmPassword"
+        value={formik.values.confirmPassword}
+        onChange={formik.handleChange}
+        error={
+          formik.touched.confirmPassword &&
+          Boolean(formik.errors.confirmPassword)
+        }
+        helperText={
+          formik.touched.confirmPassword &&
+          (formik.errors.confirmPassword as string)
+        }
+        sx={{ marginBottom: "1rem" }}
+      />
+
+      <Button
+        form="ResetPasswordForm"
+        type="submit"
+        fullWidth
+        size="small"
+        variant="contained"
+      >
+        Reset Password
+      </Button>
     </Box>
   );
 };

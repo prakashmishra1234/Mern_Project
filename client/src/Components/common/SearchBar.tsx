@@ -61,7 +61,7 @@ const SearchBar: React.FC<ISearchBar> = (props) => {
             disabled={formik.values.searchValue === ""}
             form="searchField"
             sx={{ ml: 2 }}
-            variant="outlined"
+            variant="contained"
             size="small"
           >
             Search

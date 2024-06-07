@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   Box,
   Button,
@@ -6,21 +7,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
+import { Link } from "react-router-dom";
 
-interface IOtpForm {
+interface IEmail {
   formik: any;
-  onEditClick: () => void;
   navigateToPasswordForm: () => void;
 }
 
-const OtpForm: React.FC<IOtpForm> = ({
-  formik,
-  navigateToPasswordForm,
-  onEditClick,
-}) => {
+const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
   const context = useContext(AuthContext);
   const loginWithGoogle = () => {
     context.loginWithGoogle();
@@ -28,7 +24,6 @@ const OtpForm: React.FC<IOtpForm> = ({
   return (
     <Box m={2}>
       <TextField
-        // disabled
         name="username"
         label="username / email"
         size="small"
@@ -44,54 +39,8 @@ const OtpForm: React.FC<IOtpForm> = ({
         helperText={
           formik.touched.username && (formik.errors.username as string)
         }
-        InputProps={{
-          endAdornment: (
-            <Typography sx={{ cursor: "pointer" }} onClick={onEditClick}>
-              Edit
-            </Typography>
-          ),
-        }}
         sx={{ marginBottom: "1rem" }}
       />
-      <TextField
-        name="otp"
-        label="otp"
-        size="small"
-        margin="dense"
-        autoFocus
-        fullWidth
-        variant="standard"
-        autoComplete="off"
-        id="otp"
-        value={formik.values.otp}
-        onChange={formik.handleChange}
-        error={formik.touched.otp && Boolean(formik.errors.otp)}
-        helperText={formik.touched.otp && (formik.errors.otp as string)}
-        sx={{ marginBottom: "1rem" }}
-      />
-      <Button
-        sx={{ marginBottom: "1rem" }}
-        fullWidth
-        size="small"
-        type="submit"
-        variant="contained"
-      >
-        Continue
-      </Button>
-
-      <Box
-        sx={{
-          marginBottom: "1rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <Divider sx={{ width: "43%" }} />
-        <Typography sx={{ width: "14%", textAlign: "center" }}>or</Typography>
-        <Divider sx={{ width: "43%" }} />
-      </Box>
       <Button
         fullWidth
         size="small"
@@ -100,8 +49,31 @@ const OtpForm: React.FC<IOtpForm> = ({
         onClick={navigateToPasswordForm}
         sx={{ marginBottom: "1rem" }}
       >
-        Sign in With Password
+        Continue
       </Button>
+      <Box
+        sx={{ marginBottom: "1rem" }}
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"center"}
+      >
+        <Link style={{ textDecoration: "none", color: "#000" }} to="/register">
+          Don't have account? signup!
+        </Link>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+          marginBottom: "1rem",
+        }}
+      >
+        <Divider sx={{ width: "43%" }} />
+        <Typography sx={{ width: "14%", textAlign: "center" }}>or</Typography>
+        <Divider sx={{ width: "43%" }} />
+      </Box>
       <Button
         fullWidth
         size="small"
@@ -117,4 +89,4 @@ const OtpForm: React.FC<IOtpForm> = ({
   );
 };
 
-export default OtpForm;
+export default EmailForm;
