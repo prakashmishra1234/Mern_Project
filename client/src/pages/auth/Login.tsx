@@ -1,20 +1,12 @@
 import React from "react";
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { useFormik } from "formik";
-import { AuthLogin, LoginValidator } from "../../type/AuthType";
-import { AuthContext } from "../../Store";
 import { Typography } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import PasswordForm from "../../Components/others/PasswordForm";
 import OtpForm from "../../Components/others/OtpForm";
 import EmailForm from "../../Components/others/EmailForm";
-import { matchEmailSchema } from "../../utils/helper";
 
 const Login: React.FC = () => {
-  const context = React.useContext(AuthContext);
   const [index, setIndex] = React.useState(0);
 
   const navigateToEmailForm = () => {
@@ -22,35 +14,12 @@ const Login: React.FC = () => {
   };
 
   const navigateToPasswordForm = () => {
-    if (formik.values.email !== "" || formik.values.username !== "") {
-      formik.setFieldValue("isPassword", true);
-      const temp: boolean = matchEmailSchema(formik.values.username);
-      if (temp) {
-        formik.setFieldValue("email", formik.values.username);
-        formik.setFieldValue("username", "");
-      }
-      setIndex(1);
-    } else {
-      formik.setTouched({ ...formik.touched, username: true });
-    }
+    setIndex(1);
   };
 
-  const navigateToOtpForm = (value: AuthLogin) => {
-    formik.setFieldValue("isPassword", false);
-    context.sendOtp(value);
+  const navigateToOtpForm = async () => {
     setIndex(2);
   };
-
-  const HandleSubmit = (value: AuthLogin) => {
-    console.log(value);
-  };
-
-  const formik = useFormik({
-    initialValues: LoginValidator.initials,
-    validationSchema: LoginValidator.validation,
-    onSubmit: HandleSubmit,
-    validateOnChange: true,
-  });
 
   return (
     <Box m={2}>
@@ -63,17 +32,12 @@ const Login: React.FC = () => {
         containerStyle={{ alignItems: "center" }}
         enableMouseEvents={false}
       >
-        <EmailForm
-          formik={formik}
-          navigateToPasswordForm={navigateToPasswordForm}
-        />
+        <EmailForm navigateToPasswordForm={navigateToPasswordForm} />
         <PasswordForm
-          formik={formik}
           onEditClick={navigateToEmailForm}
           navigateToOtpForm={navigateToOtpForm}
         />
         <OtpForm
-          formik={formik}
           onEditClick={navigateToEmailForm}
           navigateToPasswordForm={navigateToPasswordForm}
         />

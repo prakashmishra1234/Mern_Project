@@ -9,16 +9,13 @@ import {
 import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
-import { AuthLogin } from "../../type/AuthType";
 
 interface IOtpForm {
-  formik: any;
   onEditClick: () => void;
   navigateToPasswordForm: () => void;
 }
 
 const OtpForm: React.FC<IOtpForm> = ({
-  formik,
   navigateToPasswordForm,
   onEditClick,
 }) => {
@@ -26,13 +23,12 @@ const OtpForm: React.FC<IOtpForm> = ({
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
-  const loginWithOtp = (values: AuthLogin) => {
-    context.loginWithOtp(values);
+  const loginWithOtp = () => {
+    alert("login with otp");
   };
   return (
     <Box m={2}>
       <TextField
-        // disabled
         name="username"
         label="username / email"
         size="small"
@@ -42,16 +38,6 @@ const OtpForm: React.FC<IOtpForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
-        value={
-          formik.values.username !== ""
-            ? formik.values.username
-            : formik.values.email
-        }
-        onChange={formik.handleChange}
-        error={formik.touched.username && Boolean(formik.errors.username)}
-        helperText={
-          formik.touched.username && (formik.errors.username as string)
-        }
         InputProps={{
           readOnly: true,
           endAdornment: (
@@ -72,10 +58,6 @@ const OtpForm: React.FC<IOtpForm> = ({
         variant="standard"
         autoComplete="off"
         id="otp"
-        value={formik.values.otp}
-        onChange={formik.handleChange}
-        error={formik.touched.otp && Boolean(formik.errors.otp)}
-        helperText={formik.touched.otp && (formik.errors.otp as string)}
         sx={{ marginBottom: "1rem" }}
       />
       <Button
@@ -84,7 +66,7 @@ const OtpForm: React.FC<IOtpForm> = ({
         size="small"
         type="submit"
         variant="contained"
-        onClick={() => loginWithOtp(formik.values)}
+        onClick={loginWithOtp}
       >
         Continue
       </Button>

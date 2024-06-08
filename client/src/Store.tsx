@@ -16,7 +16,7 @@ interface IContext {
   isUserVerifcationCompleted: boolean;
   user: UserType | null;
   login: (value: AuthLogin) => void;
-  sendOtp: (value: AuthLogin) => void;
+  sendOtp: (email?: string, username?: string) => void;
   loginWithOtp: (value: AuthLogin) => void;
   loginWithGoogle: () => void;
   loginWithGoogleResp: (code: string) => void;
@@ -32,7 +32,7 @@ const AuthContext = React.createContext<IContext>({
   isUserVerifcationCompleted: false,
   login: (value: AuthLogin): void => {},
   loginWithOtp: (value: AuthLogin): void => {},
-  sendOtp: (value: AuthLogin): void => {},
+  sendOtp: (email?: string, username?: string) => {},
   loginWithGoogle: (): void => {},
   loginWithGoogleResp: (code: string): void => {},
   signUp: (value: AuthSignUp): void => {},
@@ -71,11 +71,12 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       });
   };
 
-  const sendOtp = (value: AuthLogin): void => {
+  const sendOtp = async (email?: string, username?: string) => {
     setLoading(true);
-    let url = value.email
-      ? `/api/v1/sendOtp?email=${value.email}`
-      : `/api/v1/sendOtp?username=${value.username}`;
+    let url =
+      email !== ""
+        ? `/api/v1/sendOtp?email=${email}`
+        : `/api/v1/sendOtp?username=${username}`;
     axios
       .get(url)
       .then(async (res) => {

@@ -12,11 +12,10 @@ import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
 
 interface IEmail {
-  formik: any;
   navigateToPasswordForm: () => void;
 }
 
-const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
+const EmailForm: React.FC<IEmail> = ({ navigateToPasswordForm }) => {
   const context = useContext(AuthContext);
   const loginWithGoogle = () => {
     context.loginWithGoogle();
@@ -34,16 +33,6 @@ const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
         variant="standard"
         autoComplete="off"
         id="username"
-        value={
-          formik.values.username !== ""
-            ? formik.values.username
-            : formik.values.email
-        }
-        onChange={formik.handleChange}
-        error={formik.touched.username && Boolean(formik.errors.username)}
-        helperText={
-          formik.touched.username && (formik.errors.username as string)
-        }
         sx={{ marginBottom: "1rem" }}
       />
       <Button
