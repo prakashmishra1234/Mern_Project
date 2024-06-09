@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Icon,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,6 +21,7 @@ interface IOtpForm {
 const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
   const [otp, setOtp] = React.useState("");
+  const [otpSent, setOtpSent] = React.useState<boolean>(false);
 
   const handleChange = (newValue: string) => {
     setOtp(newValue);
@@ -42,12 +44,17 @@ const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
     setIndex(1);
   };
 
+  const sendOtp = (values: AuthLogin) => {
+    const response = context.sendOtp(values);
+    console.log(response);
+  };
+
   const onOtpLogin = (values: AuthLogin) => {
     context.loginWithOtp(values);
   };
 
   return (
-    <Box m={2}>
+    <Box m={2} component={"form"}>
       <TextField
         name="username"
         label="username / email"
@@ -73,23 +80,40 @@ const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
         }}
         sx={{ marginBottom: "1rem" }}
       />
-      <MuiOtpInput
-        length={4}
-        autoFocus
+      <Box
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"flex-end"}
         sx={{ marginBottom: "1rem" }}
-        value={otp}
-        onChange={handleChange}
-        onComplete={handleComplete}
-      />
-      <Button
-        sx={{ marginBottom: "1rem" }}
-        fullWidth
-        size="small"
-        variant="contained"
-        onClick={() => onOtpLogin(formik.values)}
       >
-        Continue
-      </Button>
+        <Link
+          onClick={() => sendOtp(formik.values)}
+          sx={{ textDecoration: "none", color: "blue", cursor: "pointer" }}
+        >
+          {otpSent ? "Resend Otp" : "Send Otp"}
+        </Link>
+      </Box>
+      {otpSent && (
+        <>
+          <MuiOtpInput
+            length={4}
+            autoFocus
+            sx={{ marginBottom: "1rem" }}
+            value={otp}
+            onChange={handleChange}
+            onComplete={handleComplete}
+          />
+          <Button
+            sx={{ marginBottom: "1rem" }}
+            fullWidth
+            size="small"
+            variant="contained"
+            onClick={() => onOtpLogin(formik.values)}
+          >
+            Continue
+          </Button>
+        </>
+      )}
 
       <Box
         sx={{

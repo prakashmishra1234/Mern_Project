@@ -22,8 +22,10 @@ const Login: React.FC = () => {
     validateOnChange: true,
   });
 
+  // console.log(formik.values);
+
   return (
-    <Box m={2} component={"form"} id="loginForm" onSubmit={formik.handleSubmit}>
+    <Box m={2}>
       <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
         Sign In
       </Typography>

@@ -23,22 +23,26 @@ const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
     context.loginWithGoogle();
   };
 
-  const onContinueClick = React.useCallback(() => {
-    if (formik.values.username === "") {
-      formik.setFieldError("username", "Please provide email or username");
-    } else {
-      const isEmail = matchEmailSchema(formik.values.username);
-      if (isEmail) {
-        formik.setFieldValue("email", formik.values.username);
-        formik.setFieldValue("isEmailLogin", true);
-        formik.setFieldValue("username", "");
+  const onContinueClick = React.useCallback(
+    (e: any) => {
+      e.preventDefault();
+      if (formik.values.username === "") {
+        formik.setFieldError("username", "Please provide email or username");
+      } else {
+        const isEmail = matchEmailSchema(formik.values.username);
+        if (isEmail) {
+          formik.setFieldValue("email", formik.values.username);
+          formik.setFieldValue("isEmailLogin", true);
+          formik.setFieldValue("username", "");
+        }
+        setIndex(1);
       }
-      setIndex(1);
-    }
-  }, [setIndex, formik]);
+    },
+    [setIndex, formik]
+  );
 
   return (
-    <Box m={2}>
+    <Box m={2} component={"form"} id="emailForm" onSubmit={onContinueClick}>
       <TextField
         name="username"
         label="username / email"
@@ -61,7 +65,8 @@ const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
         fullWidth
         size="small"
         variant="contained"
-        onClick={onContinueClick}
+        type={"submit"}
+        id="emailForm"
         sx={{ marginBottom: "1rem" }}
       >
         Continue

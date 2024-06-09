@@ -25,7 +25,6 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
   };
 
   const navigateToOtpForm = (value: AuthLogin) => {
-    context.sendOtp(value);
     formik.setFieldValue("isPasswordLogin", false);
     setIndex(2);
   };
@@ -34,12 +33,22 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
     setIndex(0);
   };
 
-  const onPasswordLogin = (values: AuthLogin) => {
-    context.login(values);
+  const onPasswordLogin = (e: any, values: AuthLogin) => {
+    e.preventDefault();
+    if (values.password === "") {
+      formik.setFieldTouched("password", true);
+    } else {
+      context.login(values);
+    }
   };
 
   return (
-    <Box m={2}>
+    <Box
+      m={2}
+      component={"form"}
+      id="passwordForm"
+      onSubmit={(e) => onPasswordLogin(e, formik.values)}
+    >
       <TextField
         name="username"
         label="Username / email"
@@ -102,7 +111,8 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
         fullWidth
         size="small"
         variant="contained"
-        onClick={() => onPasswordLogin(formik.values)}
+        id="passwordForm"
+        type="submit"
       >
         Continue
       </Button>
@@ -123,7 +133,6 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
         fullWidth
         size="small"
         variant="contained"
-        type="submit"
         onClick={() => navigateToOtpForm(formik.values)}
         sx={{ marginBottom: "1rem" }}
       >
