@@ -11,20 +11,8 @@ import { AuthLogin, LoginValidator } from "../../type/AuthType";
 const Login: React.FC = () => {
   const [index, setIndex] = React.useState(0);
 
-  const navigateToEmailForm = () => {
-    setIndex(0);
-  };
-
-  const navigateToPasswordForm = () => {
-    setIndex(1);
-  };
-
-  const navigateToOtpForm = async () => {
-    setIndex(2);
-  };
-
   const handleLoginFormSubmit = (values: AuthLogin) => {
-    console.log(values);
+    alert(1);
   };
 
   const formik = useFormik({
@@ -47,14 +35,8 @@ const Login: React.FC = () => {
       >
         <EmailForm formik={formik} setIndex={setIndex} />
 
-        <PasswordForm
-          onEditClick={navigateToEmailForm}
-          navigateToOtpForm={navigateToOtpForm}
-        />
-        <OtpForm
-          onEditClick={navigateToEmailForm}
-          navigateToPasswordForm={navigateToPasswordForm}
-        />
+        <PasswordForm setIndex={setIndex} formik={formik} />
+        <OtpForm setIndex={setIndex} formik={formik} />
       </SwipeableViews>
     </Box>
   );

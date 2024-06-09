@@ -13,22 +13,29 @@ import { Link } from "react-router-dom";
 import { AuthLogin } from "../../type/AuthType";
 
 interface IPasswordForm {
-  onEditClick: () => void;
-  navigateToOtpForm: () => void;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
+  formik: any;
 }
 
-const PasswordForm: React.FC<IPasswordForm> = ({
-  onEditClick,
-  navigateToOtpForm,
-}) => {
+const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
 
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
 
-  const loginWithPassword = () => {
-    alert("login with password");
+  const navigateToOtpForm = (value: AuthLogin) => {
+    context.sendOtp(value);
+    formik.setFieldValue("isPasswordLogin", false);
+    setIndex(2);
+  };
+
+  const onEditClick = () => {
+    setIndex(0);
+  };
+
+  const onPasswordLogin = (values: AuthLogin) => {
+    context.login(values);
   };
 
   return (
@@ -43,6 +50,11 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
+        value={
+          formik.values.isEmailLogin
+            ? formik.values.email
+            : formik.values.username
+        }
         InputProps={{
           readOnly: true,
           endAdornment: (
@@ -64,6 +76,12 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         autoComplete="off"
         id="password"
         sx={{ marginBottom: "1rem" }}
+        value={formik.values.password}
+        onChange={formik.handleChange}
+        error={formik.touched.password && Boolean(formik.errors.password)}
+        helperText={
+          formik.touched.password && (formik.errors.password as string)
+        }
       />
       <Box
         width={"100%"}
@@ -80,11 +98,11 @@ const PasswordForm: React.FC<IPasswordForm> = ({
       </Box>
 
       <Button
+        sx={{ marginBottom: "1rem" }}
         fullWidth
         size="small"
-        type="submit"
         variant="contained"
-        onClick={loginWithPassword}
+        onClick={() => onPasswordLogin(formik.values)}
       >
         Continue
       </Button>
@@ -106,7 +124,7 @@ const PasswordForm: React.FC<IPasswordForm> = ({
         size="small"
         variant="contained"
         type="submit"
-        onClick={navigateToOtpForm}
+        onClick={() => navigateToOtpForm(formik.values)}
         sx={{ marginBottom: "1rem" }}
       >
         Sign in With Otp

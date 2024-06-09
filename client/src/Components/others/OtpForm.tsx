@@ -10,16 +10,14 @@ import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import { AuthLogin } from "../../type/AuthType";
 
 interface IOtpForm {
-  onEditClick: () => void;
-  navigateToPasswordForm: () => void;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
+  formik: any;
 }
 
-const OtpForm: React.FC<IOtpForm> = ({
-  navigateToPasswordForm,
-  onEditClick,
-}) => {
+const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
   const [otp, setOtp] = React.useState("");
 
@@ -28,15 +26,26 @@ const OtpForm: React.FC<IOtpForm> = ({
   };
 
   const handleComplete = (finalValue: string) => {
-    console.log(finalValue);
+    formik.setFieldValue("otp", finalValue);
+  };
+
+  const onEditClick = () => {
+    setIndex(0);
   };
 
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
-  const loginWithOtp = () => {
-    alert("login with otp");
+
+  const navigateToPasswordForm = () => {
+    formik.setFieldValue("isPasswordLogin", true);
+    setIndex(1);
   };
+
+  const onOtpLogin = (values: AuthLogin) => {
+    context.loginWithOtp(values);
+  };
+
   return (
     <Box m={2}>
       <TextField
@@ -49,6 +58,11 @@ const OtpForm: React.FC<IOtpForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
+        value={
+          formik.values.isEmailLogin
+            ? formik.values.email
+            : formik.values.username
+        }
         InputProps={{
           readOnly: true,
           endAdornment: (
@@ -71,9 +85,8 @@ const OtpForm: React.FC<IOtpForm> = ({
         sx={{ marginBottom: "1rem" }}
         fullWidth
         size="small"
-        type="submit"
         variant="contained"
-        onClick={loginWithOtp}
+        onClick={() => onOtpLogin(formik.values)}
       >
         Continue
       </Button>

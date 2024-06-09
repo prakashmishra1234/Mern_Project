@@ -29,7 +29,7 @@ export const LoginValidator = {
     email: "",
     otp: "",
     password: "",
-    isPassword: true,
+    isPasswordLogin: true,
     isEmailLogin: false,
   },
   validation: yup.object().shape({
@@ -39,7 +39,7 @@ export const LoginValidator = {
       .string()
       .when("isEmailLogin", (isEmailLogin: any, schema: any) => {
         if (!isEmailLogin) {
-          return schema.required("username is  required");
+          return schema.required("username is required");
         } else {
           return schema.notRequired();
         }
@@ -48,7 +48,7 @@ export const LoginValidator = {
       .string()
       .when("isEmailLogin", (isEmailLogin: any, schema: any) => {
         if (isEmailLogin) {
-          return schema.required("email is  required");
+          return schema.required("email is required");
         } else {
           return schema.notRequired();
         }
