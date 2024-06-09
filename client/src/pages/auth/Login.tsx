@@ -5,6 +5,8 @@ import SwipeableViews from "react-swipeable-views";
 import PasswordForm from "../../Components/others/PasswordForm";
 import OtpForm from "../../Components/others/OtpForm";
 import EmailForm from "../../Components/others/EmailForm";
+import { useFormik } from "formik";
+import { AuthLogin, LoginValidator } from "../../type/AuthType";
 
 const Login: React.FC = () => {
   const [index, setIndex] = React.useState(0);
@@ -21,8 +23,19 @@ const Login: React.FC = () => {
     setIndex(2);
   };
 
+  const handleLoginFormSubmit = (values: AuthLogin) => {
+    console.log(values);
+  };
+
+  const formik = useFormik({
+    initialValues: LoginValidator.initials,
+    validationSchema: LoginValidator.validation,
+    onSubmit: handleLoginFormSubmit,
+    validateOnChange: true,
+  });
+
   return (
-    <Box m={2}>
+    <Box m={2} component={"form"} id="loginForm" onSubmit={formik.handleSubmit}>
       <Typography variant="h4" fontSize={"small"} textAlign={"center"}>
         Sign In
       </Typography>
@@ -32,7 +45,8 @@ const Login: React.FC = () => {
         containerStyle={{ alignItems: "center" }}
         enableMouseEvents={false}
       >
-        <EmailForm navigateToPasswordForm={navigateToPasswordForm} />
+        <EmailForm formik={formik} setIndex={setIndex} />
+
         <PasswordForm
           onEditClick={navigateToEmailForm}
           navigateToOtpForm={navigateToOtpForm}

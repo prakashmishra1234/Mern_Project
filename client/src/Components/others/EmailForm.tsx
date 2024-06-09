@@ -10,16 +10,30 @@ import {
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
+import { matchEmailSchema } from "../../utils/helper";
 
 interface IEmail {
-  navigateToPasswordForm: () => void;
+  formik: any;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const EmailForm: React.FC<IEmail> = ({ navigateToPasswordForm }) => {
+const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+
+  const onContinueClick = () => {
+    const isEmail = matchEmailSchema(formik.values.username);
+    if (isEmail) {
+      formik.setFieldValue("email", formik.values.username);
+      formik.setFieldValue("isEmailLogin", true);
+      formik.setFieldValue("username", "");
+    }
+    setIndex(1);
+  };
+
+  console.log(formik.values);
 
   return (
     <Box m={2}>
@@ -34,13 +48,15 @@ const EmailForm: React.FC<IEmail> = ({ navigateToPasswordForm }) => {
         autoComplete="off"
         id="username"
         sx={{ marginBottom: "1rem" }}
+        value={formik.values.username}
+        onChange={formik.handleChange}
       />
       <Button
         fullWidth
         size="small"
         type="submit"
         variant="contained"
-        onClick={navigateToPasswordForm}
+        onClick={onContinueClick}
         sx={{ marginBottom: "1rem" }}
       >
         Continue

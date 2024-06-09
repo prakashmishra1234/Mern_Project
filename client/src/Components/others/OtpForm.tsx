@@ -9,6 +9,7 @@ import {
 import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
+import { MuiOtpInput } from "mui-one-time-password-input";
 
 interface IOtpForm {
   onEditClick: () => void;
@@ -20,6 +21,16 @@ const OtpForm: React.FC<IOtpForm> = ({
   onEditClick,
 }) => {
   const context = useContext(AuthContext);
+  const [otp, setOtp] = React.useState("");
+
+  const handleChange = (newValue: string) => {
+    setOtp(newValue);
+  };
+
+  const handleComplete = (finalValue: string) => {
+    console.log(finalValue);
+  };
+
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
@@ -48,17 +59,13 @@ const OtpForm: React.FC<IOtpForm> = ({
         }}
         sx={{ marginBottom: "1rem" }}
       />
-      <TextField
-        name="otp"
-        label="otp"
-        size="small"
-        margin="dense"
+      <MuiOtpInput
+        length={4}
         autoFocus
-        fullWidth
-        variant="standard"
-        autoComplete="off"
-        id="otp"
         sx={{ marginBottom: "1rem" }}
+        value={otp}
+        onChange={handleChange}
+        onComplete={handleComplete}
       />
       <Button
         sx={{ marginBottom: "1rem" }}

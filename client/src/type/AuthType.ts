@@ -30,13 +30,47 @@ export const LoginValidator = {
     otp: "",
     password: "",
     isPassword: true,
+    isEmailLogin: false,
   },
   validation: yup.object().shape({
-    username: yup.string(),
-    password: yup.string(),
-    otp: yup.string(),
-    email: yup.string(),
-    isPassword: yup.boolean(),
+    isPasswordLogin: yup.boolean(),
+    isEmailLogin: yup.boolean(),
+    username: yup
+      .string()
+      .when("isEmailLogin", (isEmailLogin: any, schema: any) => {
+        if (!isEmailLogin) {
+          return schema.required("username is  required");
+        } else {
+          return schema.notRequired();
+        }
+      }),
+    email: yup
+      .string()
+      .when("isEmailLogin", (isEmailLogin: any, schema: any) => {
+        if (isEmailLogin) {
+          return schema.required("email is  required");
+        } else {
+          return schema.notRequired();
+        }
+      }),
+    password: yup
+      .string()
+      .when("isPasswordLogin", (isPasswordLogin: any, schema: any) => {
+        if (!isPasswordLogin) {
+          return schema.notRequired();
+        } else {
+          return schema.required("Password is required.");
+        }
+      }),
+    otp: yup
+      .string()
+      .when("isPasswordLogin", (isPasswordLogin: any, schema: any) => {
+        if (!isPasswordLogin) {
+          return schema.required("Otp is required.");
+        } else {
+          return schema.notRequired();
+        }
+      }),
   }),
 };
 
