@@ -12,9 +12,11 @@ const axios = require("axios");
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { username, fullname, email, password } = req.body;
 
+  console.log(password, password.length);
+
   if (!password) return next(new ErrorHandler("User already signed in.", 400));
 
-  if (password.length !== 8)
+  if (password.length < 8)
     return next(
       new ErrorHandler("Password should contain minimum 8 character", 400)
     );
@@ -294,7 +296,7 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
       user.isVerified = verified_email;
       user.picture = picture;
       user.googleId = id;
-      user.provider = "google";
+      user.provider = user.provider ? user.provider + "," + "google" : "google";
     } else {
       user = await User.create({
         username: id,
@@ -399,8 +401,8 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
 
 // login with microsoft
 exports.loginWithMicrosoft = catchAsyncError(async (req, res, next) => {
-  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email&response_mode=query&nonce=nonce&state=${process.env.MICROSOFT_OAUTH_STATE}&prompt=select_account`;
-  url;
+  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email User.Read User.Read.All&response_mode=query&nonce=nonce&state=${process.env.MICROSOFT_OAUTH_STATE}&prompt=select_account`;
+  console.log(url);
   sendData(url, 200, res, "Microsoft login initiated successfully.");
 });
 
@@ -408,10 +410,12 @@ exports.loginWithMicrosoft = catchAsyncError(async (req, res, next) => {
 exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
   const { code, state } = req.query;
 
-  if (state !== process.env.MICROSOFT_OAUTH_STATE)
-    return next(new ErrorHandler("Something went wrong.", 400));
+  if (state !== process.env.MICROSOFT_OAUTH_STATE) {
+    return next(new ErrorHandler("Invalid state parameter.", 400));
+  }
 
   try {
+    // Exchange the authorization code for tokens
     const tokenResponse = await axios.post(
       "https://login.microsoftonline.com/common/oauth2/v2.0/token",
       new URLSearchParams({
@@ -430,6 +434,7 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
 
     const { access_token, id_token } = tokenResponse.data;
 
+    // Use the access token to get user data from Microsoft Graph
     const profileResponse = await axios.get(
       "https://graph.microsoft.com/v1.0/me",
       {
@@ -438,33 +443,35 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
     );
 
     const profile = profileResponse.data;
-    console.log("User profile:", profile);
-    // const { id, email, verified_email, name, picture } = profile;
+    console.log(profile);
 
-    // let user = await User.findOne({ email: email });
+    // Example of extracting user information from the profile
+    const { id, mail: email, displayName: name } = profile;
 
-    // if (user) {
-    //   user.isVerified = verified_email;
-    //   user.picture = picture;
-    //   user.googleId = id;
-    //   user.provider = "google";
-    // } else {
-    //   user = await User.create({
-    //     username: id,
-    //     fullname: name,
-    //     email: email,
-    //     isVerified: verified_email,
-    //     picture: picture,
-    //     googleId: id,
-    //     provider: "google",
-    //   });
-    // }
+    let user = await User.findOne({ email });
 
-    // await user.save({ validateBeforeSave: false });
+    if (user) {
+      user.isVerified = true;
+      user.microsoftId = id;
+      user.provider = user.provider
+        ? user.provider + "," + "microsoft"
+        : "microsoft";
+    } else {
+      user = await User.create({
+        username: id,
+        fullname: name,
+        email: email,
+        isVerified: true,
+        microsoftId: id,
+        provider: "Microsoft",
+      });
+    }
 
-    // sendToken(user, 201, res, "User logged in successfully.");
+    await user.save({ validateBeforeSave: false });
+
+    sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
-    console.error("Error exchanging code for tokens:");
+    console.error("Error message:", error);
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });

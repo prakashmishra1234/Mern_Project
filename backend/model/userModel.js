@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema({
   },
   picture: String,
   googleId: String,
+  microsoftId: String,
   provider: String,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
