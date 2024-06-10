@@ -14,6 +14,7 @@ import UserManagement from "../pages/UserManagement";
 import AdminRoute from "./component/AdminRoute";
 import MainLayout from "../Components/common/layout/MainLayout";
 import AuthLayout from "../Components/common/layout/AuthLayout";
+import MicrosoftCallback from "../pages/auth/MicrosoftCallback";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
     element: (
       <PublicRoute>
         <GoogleCallBack />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/auth/microsoft/callback",
+    element: (
+      <PublicRoute>
+        <MicrosoftCallback />
       </PublicRoute>
     ),
   },

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
+import MicrosoftIcon from "../../assets/MicrosoftIcon.svg";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
 import { matchEmailSchema } from "../../utils/helper";
@@ -21,6 +22,10 @@ const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
   const loginWithGoogle = () => {
     context.loginWithGoogle();
+  };
+
+  const loginWithMicrosoft = () => {
+    context.loginWithMicrosoft();
   };
 
   const onContinueClick = React.useCallback(
@@ -99,11 +104,23 @@ const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
         size="small"
         onClick={loginWithGoogle}
         variant="contained"
+        sx={{ marginBottom: "1rem" }}
       >
         <Icon sx={{ display: "flex" }}>
           <img alt="" src={GoogleIcon} />
         </Icon>
         Continue With Google
+      </Button>
+      <Button
+        fullWidth
+        size="small"
+        onClick={loginWithMicrosoft}
+        variant="contained"
+      >
+        <Icon sx={{ display: "flex" }}>
+          <img alt="" src={MicrosoftIcon} />
+        </Icon>
+        Continue With Microsoft
       </Button>
     </Box>
   );

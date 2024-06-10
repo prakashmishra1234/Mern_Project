@@ -11,6 +11,7 @@ import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
 import { AuthLogin } from "../../type/AuthType";
+import MicrosoftIcon from "../../assets/MicrosoftIcon.svg";
 
 interface IPasswordForm {
   setIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -40,6 +41,10 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
     } else {
       context.login(values);
     }
+  };
+
+  const loginWithMicrosoft = () => {
+    context.loginWithMicrosoft();
   };
 
   return (
@@ -143,11 +148,23 @@ const PasswordForm: React.FC<IPasswordForm> = ({ formik, setIndex }) => {
         size="small"
         onClick={loginWithGoogle}
         variant="contained"
+        sx={{ marginBottom: "1rem" }}
       >
         <Icon sx={{ display: "flex" }}>
           <img alt="" src={GoogleIcon} />
         </Icon>
         Continue With Google
+      </Button>
+      <Button
+        fullWidth
+        size="small"
+        onClick={loginWithMicrosoft}
+        variant="contained"
+      >
+        <Icon sx={{ display: "flex" }}>
+          <img alt="" src={MicrosoftIcon} />
+        </Icon>
+        Continue With Microsoft
       </Button>
     </Box>
   );

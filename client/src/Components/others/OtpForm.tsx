@@ -12,6 +12,7 @@ import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { AuthLogin } from "../../type/AuthType";
+import MicrosoftIcon from "../../assets/MicrosoftIcon.svg";
 
 interface IOtpForm {
   setIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -37,6 +38,10 @@ const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
 
   const loginWithGoogle = () => {
     context.loginWithGoogle();
+  };
+
+  const loginWithMicrosoft = () => {
+    context.loginWithMicrosoft();
   };
 
   const navigateToPasswordForm = () => {
@@ -143,11 +148,23 @@ const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
         size="small"
         onClick={loginWithGoogle}
         variant="contained"
+        sx={{ marginBottom: "1rem" }}
       >
         <Icon sx={{ display: "flex" }}>
           <img alt="" src={GoogleIcon} />
         </Icon>
         Continue With Google
+      </Button>
+      <Button
+        fullWidth
+        size="small"
+        onClick={loginWithMicrosoft}
+        variant="contained"
+      >
+        <Icon sx={{ display: "flex" }}>
+          <img alt="" src={MicrosoftIcon} />
+        </Icon>
+        Continue With Microsoft
       </Button>
     </Box>
   );

@@ -19,7 +19,9 @@ interface IContext {
   sendOtp: (value: AuthLogin) => void;
   loginWithOtp: (value: AuthLogin) => void;
   loginWithGoogle: () => void;
+  loginWithMicrosoft: () => void;
   loginWithGoogleResp: (code: string) => void;
+  loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
   logout: () => void;
   forgetPassword: (value: AuthForgetPassword) => void;
@@ -34,7 +36,9 @@ const AuthContext = React.createContext<IContext>({
   loginWithOtp: (value: AuthLogin): void => {},
   sendOtp: (value: AuthLogin) => {},
   loginWithGoogle: (): void => {},
+  loginWithMicrosoft: (): void => {},
   loginWithGoogleResp: (code: string): void => {},
+  loginWithMicrosoftResp: (code: string, state: string): void => {},
   signUp: (value: AuthSignUp): void => {},
   logout: (): void => {},
   forgetPassword: (value: AuthForgetPassword): void => {},
@@ -129,6 +133,43 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       });
   };
 
+  const loginWithMicrosoft = (): void => {
+    setLoading(true);
+    axios
+      .get("/api/v1/auth/microsoft")
+      .then(async (res) => {
+        window.location.href = res.data.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const loginWithMicrosoftResp = (code: string, state: string): void => {
+    setLoading(true);
+    setIsUserVerifcationCompleted(false);
+    axios
+      .get(`/api/v1/auth/microsoft/callback?code=${code}&state=${state}`)
+      .then(async (res) => {
+        await getUserData();
+      })
+      .catch((err) => {
+        setIsUserVerifcationCompleted(true);
+        setUser(null);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
+        window.location.replace("/login");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const loginWithGoogleResp = (code: string): void => {
     setLoading(true);
     setIsUserVerifcationCompleted(false);
@@ -139,10 +180,12 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       })
       .catch((err) => {
         setIsUserVerifcationCompleted(true);
+        setUser(null);
         getToastMessage({
           type: ToastMessageEnumType.error,
           messgae: err.response.data.message,
         });
+        window.location.replace("/login");
       })
       .finally(() => {
         setLoading(false);
@@ -264,7 +307,9 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         login,
         loginWithOtp,
         loginWithGoogle,
+        loginWithMicrosoft,
         loginWithGoogleResp,
+        loginWithMicrosoftResp,
         sendOtp,
         signUp,
         logout,
