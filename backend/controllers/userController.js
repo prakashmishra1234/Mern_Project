@@ -402,7 +402,6 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
 // login with microsoft
 exports.loginWithMicrosoft = catchAsyncError(async (req, res, next) => {
   const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email User.Read User.Read.All&response_mode=query&nonce=nonce&state=${process.env.MICROSOFT_OAUTH_STATE}&prompt=select_account`;
-  console.log(url);
   sendData(url, 200, res, "Microsoft login initiated successfully.");
 });
 
@@ -443,7 +442,6 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
     );
 
     const profile = profileResponse.data;
-    console.log(profile);
 
     // Example of extracting user information from the profile
     const { id, mail: email, displayName: name } = profile;
