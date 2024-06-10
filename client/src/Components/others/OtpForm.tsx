@@ -3,32 +3,59 @@ import {
   Button,
   Divider,
   Icon,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useContext } from "react";
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
+import { MuiOtpInput } from "mui-one-time-password-input";
+import { AuthLogin } from "../../type/AuthType";
 
 interface IOtpForm {
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
   formik: any;
-  onEditClick: () => void;
-  navigateToPasswordForm: () => void;
 }
 
-const OtpForm: React.FC<IOtpForm> = ({
-  formik,
-  navigateToPasswordForm,
-  onEditClick,
-}) => {
+const OtpForm: React.FC<IOtpForm> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
+  const [otp, setOtp] = React.useState("");
+  const [otpSent, setOtpSent] = React.useState<boolean>(false);
+
+  const handleChange = (newValue: string) => {
+    setOtp(newValue);
+  };
+
+  const handleComplete = (finalValue: string) => {
+    formik.setFieldValue("otp", finalValue);
+  };
+
+  const onEditClick = () => {
+    setIndex(0);
+  };
+
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+
+  const navigateToPasswordForm = () => {
+    formik.setFieldValue("isPasswordLogin", true);
+    setIndex(1);
+  };
+
+  const sendOtp = (values: AuthLogin) => {
+    const response = context.sendOtp(values);
+    console.log(response);
+  };
+
+  const onOtpLogin = (values: AuthLogin) => {
+    context.loginWithOtp(values);
+  };
+
   return (
-    <Box m={2}>
+    <Box m={2} component={"form"}>
       <TextField
-        // disabled
         name="username"
         label="username / email"
         size="small"
@@ -38,11 +65,10 @@ const OtpForm: React.FC<IOtpForm> = ({
         variant="standard"
         autoComplete="off"
         id="username"
-        value={formik.values.username}
-        onChange={formik.handleChange}
-        error={formik.touched.username && Boolean(formik.errors.username)}
-        helperText={
-          formik.touched.username && (formik.errors.username as string)
+        value={
+          formik.values.isEmailLogin
+            ? formik.values.email
+            : formik.values.username
         }
         InputProps={{
           readOnly: true,
@@ -54,31 +80,40 @@ const OtpForm: React.FC<IOtpForm> = ({
         }}
         sx={{ marginBottom: "1rem" }}
       />
-      <TextField
-        name="otp"
-        label="otp"
-        size="small"
-        margin="dense"
-        autoFocus
-        fullWidth
-        variant="standard"
-        autoComplete="off"
-        id="otp"
-        value={formik.values.otp}
-        onChange={formik.handleChange}
-        error={formik.touched.otp && Boolean(formik.errors.otp)}
-        helperText={formik.touched.otp && (formik.errors.otp as string)}
+      <Box
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"flex-end"}
         sx={{ marginBottom: "1rem" }}
-      />
-      <Button
-        sx={{ marginBottom: "1rem" }}
-        fullWidth
-        size="small"
-        type="submit"
-        variant="contained"
       >
-        Continue
-      </Button>
+        <Link
+          onClick={() => sendOtp(formik.values)}
+          sx={{ textDecoration: "none", color: "blue", cursor: "pointer" }}
+        >
+          {otpSent ? "Resend Otp" : "Send Otp"}
+        </Link>
+      </Box>
+      {otpSent && (
+        <>
+          <MuiOtpInput
+            length={4}
+            autoFocus
+            sx={{ marginBottom: "1rem" }}
+            value={otp}
+            onChange={handleChange}
+            onComplete={handleComplete}
+          />
+          <Button
+            sx={{ marginBottom: "1rem" }}
+            fullWidth
+            size="small"
+            variant="contained"
+            onClick={() => onOtpLogin(formik.values)}
+          >
+            Continue
+          </Button>
+        </>
+      )}
 
       <Box
         sx={{

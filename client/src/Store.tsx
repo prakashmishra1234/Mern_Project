@@ -16,6 +16,8 @@ interface IContext {
   isUserVerifcationCompleted: boolean;
   user: UserType | null;
   login: (value: AuthLogin) => void;
+  sendOtp: (value: AuthLogin) => void;
+  loginWithOtp: (value: AuthLogin) => void;
   loginWithGoogle: () => void;
   loginWithGoogleResp: (code: string) => void;
   signUp: (value: AuthSignUp) => void;
@@ -29,6 +31,8 @@ const AuthContext = React.createContext<IContext>({
   setLoading: () => {},
   isUserVerifcationCompleted: false,
   login: (value: AuthLogin): void => {},
+  loginWithOtp: (value: AuthLogin): void => {},
+  sendOtp: (value: AuthLogin) => {},
   loginWithGoogle: (): void => {},
   loginWithGoogleResp: (code: string): void => {},
   signUp: (value: AuthSignUp): void => {},
@@ -52,6 +56,49 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setIsUserVerifcationCompleted(false);
     axios
       .post("/api/v1/login", value)
+      .then(async (res) => {
+        await getUserData();
+      })
+      .catch((err) => {
+        setIsUserVerifcationCompleted(true);
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const sendOtp = async (value: AuthLogin) => {
+    setLoading(true);
+    let url = value.isEmailLogin
+      ? `/api/v1/sendOtp?email=${value.email}`
+      : `/api/v1/sendOtp?username=${value.username}`;
+    axios
+      .get(url)
+      .then(async (res) => {
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: res.data.message,
+        });
+      })
+      .catch((err) => {
+        getToastMessage({
+          type: ToastMessageEnumType.error,
+          messgae: err.response.data.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  const loginWithOtp = (value: AuthLogin): void => {
+    setLoading(true);
+    setIsUserVerifcationCompleted(false);
+    axios
+      .post("/api/v1/verifyOtp", value)
       .then(async (res) => {
         await getUserData();
       })
@@ -215,8 +262,10 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         isUserVerifcationCompleted,
         user,
         login,
+        loginWithOtp,
         loginWithGoogle,
         loginWithGoogleResp,
+        sendOtp,
         signUp,
         logout,
         forgetPassword,

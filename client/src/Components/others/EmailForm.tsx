@@ -10,19 +10,39 @@ import {
 import GoogleIcon from "../../assets/GoogleIcon.svg";
 import { AuthContext } from "../../Store";
 import { Link } from "react-router-dom";
+import { matchEmailSchema } from "../../utils/helper";
 
 interface IEmail {
   formik: any;
-  navigateToPasswordForm: () => void;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
+const EmailForm: React.FC<IEmail> = ({ formik, setIndex }) => {
   const context = useContext(AuthContext);
   const loginWithGoogle = () => {
     context.loginWithGoogle();
   };
+
+  const onContinueClick = React.useCallback(
+    (e: any) => {
+      e.preventDefault();
+      if (formik.values.username === "") {
+        formik.setFieldError("username", "Please provide email or username");
+      } else {
+        const isEmail = matchEmailSchema(formik.values.username);
+        if (isEmail) {
+          formik.setFieldValue("email", formik.values.username);
+          formik.setFieldValue("isEmailLogin", true);
+          formik.setFieldValue("username", "");
+        }
+        setIndex(1);
+      }
+    },
+    [setIndex, formik]
+  );
+
   return (
-    <Box m={2}>
+    <Box m={2} component={"form"} id="emailForm" onSubmit={onContinueClick}>
       <TextField
         name="username"
         label="username / email"
@@ -33,20 +53,20 @@ const EmailForm: React.FC<IEmail> = ({ formik, navigateToPasswordForm }) => {
         variant="standard"
         autoComplete="off"
         id="username"
+        sx={{ marginBottom: "1rem" }}
         value={formik.values.username}
         onChange={formik.handleChange}
-        error={formik.touched.username && Boolean(formik.errors.username)}
+        error={formik.errors.username && Boolean(formik.errors.username)}
         helperText={
-          formik.touched.username && (formik.errors.username as string)
+          formik.errors.username && (formik.errors.username as string)
         }
-        sx={{ marginBottom: "1rem" }}
       />
       <Button
         fullWidth
         size="small"
-        type="submit"
         variant="contained"
-        onClick={navigateToPasswordForm}
+        type={"submit"}
+        id="emailForm"
         sx={{ marginBottom: "1rem" }}
       >
         Continue

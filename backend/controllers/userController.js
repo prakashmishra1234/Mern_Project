@@ -67,14 +67,20 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Please enter username and password", 400));
   }
 
-  let user = await User.findOne({ username: username }).select("+password");
+  let user;
 
-  if (!user) {
+  if (username) {
+    user = await User.findOne({ username: username }).select("+password");
+  } else {
     user = await User.findOne({ email: username }).select("+password");
   }
 
-  if (!user) {
-    return next(new ErrorHandler("Invalid username or password", 400));
+  if (username && !user) {
+    return next(new ErrorHandler("Username or password is incorrect.", 400));
+  }
+
+  if (!username && !user) {
+    return next(new ErrorHandler("Email or password is incorrect.", 400));
   }
 
   const isPasswordMatched = await user.comparePassword(password);
@@ -366,6 +372,11 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
       emailVerificationOtp: otp,
       emailVerificationOtpExpire: { $gt: Date.now() },
     });
+    if (!user) {
+      return next(
+        new ErrorHandler("email / otp is invalid or otp is expired", 400)
+      );
+    }
   }
 
   if (username) {
@@ -373,10 +384,11 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
       username: username,
       emailVerificationOtpExpire: { $gt: Date.now() },
     });
-  }
-
-  if (!user) {
-    return next(new ErrorHandler("Otp is invalid or has been expired", 400));
+    if (!user) {
+      return next(
+        new ErrorHandler("username / otp is invalid or otp is expired", 400)
+      );
+    }
   }
 
   user.emailVerificationOtp = undefined;

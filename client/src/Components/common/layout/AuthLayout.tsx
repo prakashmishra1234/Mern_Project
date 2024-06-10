@@ -1,6 +1,4 @@
 import { Box, Paper } from "@mui/material";
-import React from "react";
-import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
 import backgorundImageForAuthComp from "../../../assets/backgorundImageForAuthComp.jpeg";
 
