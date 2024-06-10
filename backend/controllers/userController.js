@@ -257,7 +257,7 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
 exports.loginWithGoogle = catchAsyncError(async (req, res, next) => {
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email&prompt=select_account`;
   url;
-  sendData(url, 200, res, "Email verification mail sent successfully.");
+  sendData(url, 200, res, "Google login initiated successfully.");
 });
 
 // login with google response
@@ -383,4 +383,66 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
   user.emailVerificationOtpExpire = undefined;
   await user.save({ validateBeforeSave: false });
   sendToken(user, 200, res, "User logged in successfully");
+});
+
+// login with microsoft
+exports.loginWithMicrosoft = catchAsyncError(async (req, res, next) => {
+  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email&response_mode=query&nonce=nonce&state=${process.env.MICROSOFT_OAUTH_STATE}&prompt=select_account`;
+  url;
+  sendData(url, 200, res, "Microsoft login initiated successfully.");
+});
+
+// login with microsoft response
+exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
+  const { code, state } = req.query;
+
+  if (state !== process.env.MICROSOFT_OAUTH_STATE)
+    return next(new ErrorHandler("Something went wrong.", 400));
+
+  console.log(code, state);
+
+  // try {
+  //   const { data } = await axios.post("https://oauth2.googleapis.com/token", {
+  //     client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+  //     client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  //     code,
+  //     redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+  //     grant_type: "authorization_code",
+  //   });
+
+  //   const { access_token } = data;
+
+  //   const { data: profile } = await axios.get(
+  //     "https://www.googleapis.com/oauth2/v1/userinfo",
+  //     {
+  //       headers: { Authorization: `Bearer ${access_token}` },
+  //     }
+  //   );
+  //   const { id, email, verified_email, name, picture } = profile;
+
+  //   let user = await User.findOne({ email: email });
+
+  //   if (user) {
+  //     user.isVerified = verified_email;
+  //     user.picture = picture;
+  //     user.googleId = id;
+  //     user.provider = "google";
+  //   } else {
+  //     user = await User.create({
+  //       username: id,
+  //       fullname: name,
+  //       email: email,
+  //       isVerified: verified_email,
+  //       picture: picture,
+  //       googleId: id,
+  //       provider: "google",
+  //     });
+  //   }
+
+  //   await user.save({ validateBeforeSave: false });
+
+  //   sendToken(user, 201, res, "User logged in successfully.");
+  // } catch (error) {
+  //   return next(new ErrorHandler("Something went wrong.", 400));
+  // }
 });
