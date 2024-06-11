@@ -296,7 +296,10 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
       user.isVerified = verified_email;
       user.picture = picture;
       user.googleId = id;
-      user.provider = user.provider ? user.provider + "," + "google" : "google";
+      if (!user.provider.includes("google"))
+        user.provider = user.provider
+          ? user.provider + "," + "google"
+          : "google";
     } else {
       user = await User.create({
         username: id,
@@ -451,9 +454,10 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
     if (user) {
       user.isVerified = true;
       user.microsoftId = id;
-      user.provider = user.provider
-        ? user.provider + "," + "microsoft"
-        : "microsoft";
+      if (!user.provider.includes("microsoft"))
+        user.provider = user.provider
+          ? user.provider + "," + "microsoft"
+          : "microsoft";
     } else {
       user = await User.create({
         username: id,
