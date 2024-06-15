@@ -61,6 +61,8 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User already signed in.", 400));
   }
 
+  console.log(req.body);
+
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -68,6 +70,10 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
   }
 
   let user = await User.findOne({ email: email }).select("+password");
+
+  if (!user) {
+    return next(new ErrorHandler("Invalid username or password", 400));
+  }
 
   if (!user.password) {
     return next(new ErrorHandler("Your login method is different", 400));
