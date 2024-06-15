@@ -55,8 +55,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000",
   "devDependencies": {
     "@types/react-swipeable-views": "^0.13.5"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
