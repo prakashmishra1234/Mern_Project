@@ -112,3 +112,24 @@ export const PasswordValidator = {
 export type AuthChangePassword = yup.InferType<
   typeof PasswordValidator.validation
 >;
+
+export const LoginWithPassword = {
+  initials: {
+    email: "",
+    password: "",
+  },
+  validation: yup.object().shape({
+    email: yup
+      .string()
+      .matches(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please enter a valid email id"
+      )
+      .required("Email is required"),
+    password: yup.string().required("Password is required"),
+  }),
+};
+
+export type LoginWithPasswordType = yup.InferType<
+  typeof LoginWithPassword.validation
+>;

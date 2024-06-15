@@ -2,22 +2,18 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import { AuthSignUp, SignupValidator } from "../../type/AuthType";
 import { AuthContext } from "../../Store";
-import { Divider, Icon, TextField, Typography } from "@mui/material";
-import GoogleIcon from "../../assets/GoogleIcon.svg";
+import { Divider, TextField, Typography } from "@mui/material";
+import LoginWithGoogleButton from "../../Components/others/auth/LoginWithGoogleButton";
+import LoginWithMicrosoftButton from "../../Components/others/auth/LoginWithMicrosoftButton";
 
 const Register: React.FC = () => {
   const context = React.useContext(AuthContext);
 
   const handleSubmit = (value: AuthSignUp) => {
     context.signUp(value);
-  };
-
-  const loginWithGoogle = () => {
-    context.loginWithGoogle();
   };
 
   const formik = useFormik({
@@ -145,17 +141,8 @@ const Register: React.FC = () => {
         <Typography sx={{ width: "14%", textAlign: "center" }}>or</Typography>
         <Divider sx={{ width: "43%" }} />
       </Box>
-      <Button
-        fullWidth
-        size="small"
-        onClick={loginWithGoogle}
-        variant="contained"
-      >
-        <Icon sx={{ display: "flex" }}>
-          <img alt="" src={GoogleIcon} />
-        </Icon>
-        Continue With Google
-      </Button>
+      <LoginWithGoogleButton />
+      <LoginWithMicrosoftButton />
     </Box>
   );
 };
