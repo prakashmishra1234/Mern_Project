@@ -61,8 +61,6 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User already signed in.", 400));
   }
 
-  console.log(req.body);
-
   const { email, password } = req.body;
 
   if (!email || !password) {

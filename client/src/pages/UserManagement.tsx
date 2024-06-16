@@ -22,11 +22,11 @@ const UserManagement = () => {
       keyword: searchKeyWord,
       page: currentPage,
     });
-    context.setLoading(false);
-    if (data.data) {
+    if (data.success && data.data) {
       setUsers(data.data.users);
       setTotalPage(data.data.userCount / data.data.resultPerPage);
     }
+    context.setLoading(false);
   };
 
   const handlePaginationChanges = (

@@ -3,6 +3,8 @@ import GoogleIcon from "../../../assets/GoogleIcon.svg";
 import React from "react";
 import { getDataFromApi } from "../../../api/CustomApiCall";
 import { ApiMethods } from "../../../enum/ApiMethods";
+import { getToastMessage } from "../../common/ToastMessage";
+import { ToastMessageEnumType } from "../../../enum/ToastMessage";
 
 const LoginWithGoogleButton = () => {
   const [loading, setLoading] = React.useState(false);
@@ -10,6 +12,14 @@ const LoginWithGoogleButton = () => {
   const loginWithGoogle = async () => {
     setLoading(true);
     const data = await getDataFromApi("/api/v1/auth/google", ApiMethods.GET);
+    if (data.success && data.data) {
+      window.location.href = data.data;
+    } else {
+      getToastMessage({
+        type: ToastMessageEnumType.error,
+        messgae: data.data.message,
+      });
+    }
     setLoading(false);
   };
 
