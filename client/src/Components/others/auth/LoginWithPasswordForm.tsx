@@ -13,6 +13,7 @@ import { ToastMessageEnumType } from "../../../enum/ToastMessage";
 
 const LoginWithPasswordForm = () => {
   const context = useContext(AuthContext);
+
   const handleSubmit = async (values: LoginWithPasswordType) => {
     context.setLoading(true);
     const data = await getDataFromApi(
@@ -39,7 +40,12 @@ const LoginWithPasswordForm = () => {
   });
 
   return (
-    <Box component={"form"} id="emailForm" onSubmit={formik.handleSubmit}>
+    <Box
+      component={"form"}
+      id="emailForm"
+      onSubmit={formik.handleSubmit}
+      px={2}
+    >
       <TextField
         name="email"
         label="Email"

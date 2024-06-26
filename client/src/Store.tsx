@@ -4,7 +4,6 @@ import axios from "axios";
 import {
   AuthChangePassword,
   AuthForgetPassword,
-  AuthLogin,
   AuthSignUp,
 } from "./type/AuthType";
 import { getToastMessage } from "./Components/common/ToastMessage";
@@ -15,8 +14,6 @@ interface IContext {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isUserVerifcationCompleted: boolean;
   user: UserType | null;
-  sendOtp: (value: AuthLogin) => void;
-  loginWithOtp: (value: AuthLogin) => void;
   loginWithGoogleResp: (code: string) => void;
   loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
@@ -29,8 +26,6 @@ const AuthContext = React.createContext<IContext>({
   loading: false,
   setLoading: () => {},
   isUserVerifcationCompleted: false,
-  loginWithOtp: (value: AuthLogin): void => {},
-  sendOtp: (value: AuthLogin) => {},
   loginWithGoogleResp: (code: string): void => {},
   loginWithMicrosoftResp: (code: string, state: string): void => {},
   signUp: (value: AuthSignUp): void => {},
@@ -48,49 +43,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
     React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
-
-  const sendOtp = async (value: AuthLogin) => {
-    setLoading(true);
-    let url = value.isEmailLogin
-      ? `/api/v1/sendOtp?email=${value.email}`
-      : `/api/v1/sendOtp?username=${value.username}`;
-    axios
-      .get(url)
-      .then(async (res) => {
-        getToastMessage({
-          type: ToastMessageEnumType.error,
-          messgae: res.data.message,
-        });
-      })
-      .catch((err) => {
-        getToastMessage({
-          type: ToastMessageEnumType.error,
-          messgae: err.response.data.message,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-  const loginWithOtp = (value: AuthLogin): void => {
-    setLoading(true);
-    setIsUserVerifcationCompleted(false);
-    axios
-      .post("/api/v1/verifyOtp", value)
-      .then(async (res) => {
-        await getUserData();
-      })
-      .catch((err) => {
-        setIsUserVerifcationCompleted(true);
-        getToastMessage({
-          type: ToastMessageEnumType.error,
-          messgae: err.response.data.message,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   const loginWithMicrosoftResp = (code: string, state: string): void => {
     setLoading(true);
@@ -246,13 +198,11 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <AuthContext.Provider
       value={{
         loading,
-        setLoading,
         isUserVerifcationCompleted,
         user,
-        loginWithOtp,
+        setLoading,
         loginWithGoogleResp,
         loginWithMicrosoftResp,
-        sendOtp,
         signUp,
         logout,
         forgetPassword,
