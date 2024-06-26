@@ -57,6 +57,7 @@ const LoginWithOtpForm = () => {
   };
 
   const VerifyOtp = async (values: LoginWithOtpType) => {
+    context.setIsUserVerifcationCompleted(false);
     context.setLoading(true);
     const data = await getDataFromApi(
       `/api/v1/verifyOtp`,
@@ -65,11 +66,8 @@ const LoginWithOtpForm = () => {
       values
     );
     if (data.success) {
-      getToastMessage({
-        type: ToastMessageEnumType.success,
-        messgae: data.message,
-      });
-      navigateToOtpForm();
+      const user = await getDataFromApi("/api/v1/me", ApiMethods.GET);
+      context.setUser(user.data);
     } else {
       getToastMessage({
         type: ToastMessageEnumType.error,
@@ -77,6 +75,7 @@ const LoginWithOtpForm = () => {
       });
     }
     context.setLoading(false);
+    context.setIsUserVerifcationCompleted(true);
   };
 
   const handleSubmit = async (values: LoginWithOtpType) => {

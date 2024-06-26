@@ -68,7 +68,7 @@ const ForgotPassword: React.FC = () => {
         justifyContent={"center"}
         sx={{ marginBottom: "1rem" }}
       >
-        <Link style={{ textDecoration: "none", color: "#000" }} to="/login">
+        <Link style={{ textDecoration: "none", color: "#000" }} to="/Auth">
           Back to login?
         </Link>
       </Box>

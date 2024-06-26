@@ -15,6 +15,7 @@ const LoginWithPasswordForm = () => {
   const context = useContext(AuthContext);
 
   const handleSubmit = async (values: LoginWithPasswordType) => {
+    context.setIsUserVerifcationCompleted(false);
     context.setLoading(true);
     const data = await getDataFromApi(
       "/api/v1/login",
@@ -23,6 +24,8 @@ const LoginWithPasswordForm = () => {
       values
     );
     if (data.success) {
+      const user = await getDataFromApi("/api/v1/me", ApiMethods.GET);
+      context.setUser(user.data);
     } else {
       getToastMessage({
         type: ToastMessageEnumType.error,
@@ -30,6 +33,7 @@ const LoginWithPasswordForm = () => {
       });
     }
     context.setLoading(false);
+    context.setIsUserVerifcationCompleted(true);
   };
 
   const formik = useFormik({

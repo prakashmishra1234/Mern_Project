@@ -126,7 +126,7 @@ const Register: React.FC = () => {
         justifyContent={"center"}
         sx={{ marginBottom: "1rem" }}
       >
-        <Link to="/login">Already registered! Login</Link>
+        <Link to="/Auth">Already registered! Login</Link>
       </Box>
       <Box
         sx={{

@@ -13,7 +13,9 @@ interface IContext {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isUserVerifcationCompleted: boolean;
+  setIsUserVerifcationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   user: UserType | null;
+  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   loginWithGoogleResp: (code: string) => void;
   loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
@@ -26,6 +28,7 @@ const AuthContext = React.createContext<IContext>({
   loading: false,
   setLoading: () => {},
   isUserVerifcationCompleted: false,
+  setIsUserVerifcationCompleted: () => {},
   loginWithGoogleResp: (code: string): void => {},
   loginWithMicrosoftResp: (code: string, state: string): void => {},
   signUp: (value: AuthSignUp): void => {},
@@ -36,6 +39,7 @@ const AuthContext = React.createContext<IContext>({
     value: AuthChangePassword
   ): void => {},
   user: null,
+  setUser: () => {},
 });
 
 const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -200,6 +204,8 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         loading,
         isUserVerifcationCompleted,
         user,
+        setUser,
+        setIsUserVerifcationCompleted,
         setLoading,
         loginWithGoogleResp,
         loginWithMicrosoftResp,
