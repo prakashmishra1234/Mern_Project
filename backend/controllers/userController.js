@@ -424,6 +424,8 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
       }
     );
 
+    console.log(tokenResponse);
+
     const { access_token, id_token } = tokenResponse.data;
 
     // Use the access token to get user data from Microsoft Graph
@@ -433,6 +435,8 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
         headers: { Authorization: `Bearer ${access_token}` },
       }
     );
+
+    console.log(profileResponse);
 
     const profile = profileResponse.data;
 

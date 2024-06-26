@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.64f5eed4.css",
-    "main.js": "/static/js/main.1ee70722.js",
+    "main.js": "/static/js/main.32329f81.js",
     "static/media/backgorundImageForAuthComp.jpeg": "/static/media/backgorundImageForAuthComp.9517459f650c3eca12f5.jpeg",
     "static/media/GoogleIcon.svg": "/static/media/GoogleIcon.3b674165ff3dd357c7ca6fb9c5963d52.svg",
     "index.html": "/index.html",
     "static/media/MicrosoftIcon.svg": "/static/media/MicrosoftIcon.8a87a3d76f2305c290b4e6513d615ac5.svg",
     "main.64f5eed4.css.map": "/static/css/main.64f5eed4.css.map",
-    "main.1ee70722.js.map": "/static/js/main.1ee70722.js.map"
+    "main.32329f81.js.map": "/static/js/main.32329f81.js.map"
   },
   "entrypoints": [
     "static/css/main.64f5eed4.css",
-    "static/js/main.1ee70722.js"
+    "static/js/main.32329f81.js"
   ]
 }

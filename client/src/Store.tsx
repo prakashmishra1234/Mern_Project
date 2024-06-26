@@ -98,7 +98,8 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get(`/api/v1/auth/microsoft/callback?code=${code}&state=${state}`)
       .then(async (res) => {
-        await getUserData();
+        console.log(res);
+        // await getUserData();
       })
       .catch((err) => {
         setIsUserVerifcationCompleted(true);
@@ -107,7 +108,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           type: ToastMessageEnumType.error,
           messgae: err.response.data.message,
         });
-        window.location.replace("/login");
+        // window.location.replace("/login");
       })
       .finally(() => {
         setLoading(false);
