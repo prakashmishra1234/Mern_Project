@@ -67,7 +67,11 @@ const LoginWithOtpForm = () => {
     );
     if (data.success) {
       const user = await getDataFromApi("/api/v1/me", ApiMethods.GET);
-      context.setUser(user.data);
+      if (user.success) {
+        context.setUser(user.data);
+      } else {
+        context.logout();
+      }
     } else {
       getToastMessage({
         type: ToastMessageEnumType.error,
