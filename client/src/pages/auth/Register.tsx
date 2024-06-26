@@ -58,24 +58,6 @@ const Register: React.FC = () => {
       />
 
       <TextField
-        name="username"
-        label="Username"
-        size="small"
-        margin="dense"
-        fullWidth
-        variant="standard"
-        autoComplete="off"
-        id="username"
-        value={formik.values.username}
-        onChange={formik.handleChange}
-        error={formik.touched.username && Boolean(formik.errors.username)}
-        helperText={
-          formik.touched.username && (formik.errors.username as string)
-        }
-        sx={{ marginBottom: "1rem" }}
-      />
-
-      <TextField
         name="email"
         label="Email"
         size="small"
@@ -84,6 +66,7 @@ const Register: React.FC = () => {
         variant="standard"
         autoComplete="off"
         id="email"
+        type="email"
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}

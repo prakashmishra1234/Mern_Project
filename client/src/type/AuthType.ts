@@ -2,13 +2,11 @@ import * as yup from "yup";
 
 export const SignupValidator = {
   initials: {
-    username: "",
     fullname: "",
     email: "",
     password: "",
   },
   validation: yup.object().shape({
-    username: yup.string().required("Username is required"),
     fullname: yup.string().required("Full Name is required"),
     email: yup
       .string()
