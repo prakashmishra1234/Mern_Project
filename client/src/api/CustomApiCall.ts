@@ -25,12 +25,14 @@ export const getDataFromApi = async (
       params: params,
       data: requestBody,
     });
+    console.log("API Response : ", res);
     data = {
       data: res.data.data,
       message: res.data.message,
       success: res.data.success,
     };
   } catch (err: any) {
+    console.error("API Error : ", err);
     data = {
       data: null,
       message: err.response.data.message,

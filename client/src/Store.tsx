@@ -15,11 +15,8 @@ interface IContext {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isUserVerifcationCompleted: boolean;
   user: UserType | null;
-  login: (value: AuthLogin) => void;
   sendOtp: (value: AuthLogin) => void;
   loginWithOtp: (value: AuthLogin) => void;
-  loginWithGoogle: () => void;
-  loginWithMicrosoft: () => void;
   loginWithGoogleResp: (code: string) => void;
   loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
@@ -32,11 +29,8 @@ const AuthContext = React.createContext<IContext>({
   loading: false,
   setLoading: () => {},
   isUserVerifcationCompleted: false,
-  login: (value: AuthLogin): void => {},
   loginWithOtp: (value: AuthLogin): void => {},
   sendOtp: (value: AuthLogin) => {},
-  loginWithGoogle: (): void => {},
-  loginWithMicrosoft: (): void => {},
   loginWithGoogleResp: (code: string): void => {},
   loginWithMicrosoftResp: (code: string, state: string): void => {},
   signUp: (value: AuthSignUp): void => {},
@@ -54,26 +48,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
     React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
-
-  const login = (value: AuthLogin): void => {
-    setLoading(true);
-    setIsUserVerifcationCompleted(false);
-    axios
-      .post("/api/v1/login", value)
-      .then(async (res) => {
-        await getUserData();
-      })
-      .catch((err) => {
-        setIsUserVerifcationCompleted(true);
-        getToastMessage({
-          type: ToastMessageEnumType.error,
-          messgae: err.response.data.message,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   const sendOtp = async (value: AuthLogin) => {
     setLoading(true);
@@ -118,43 +92,14 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       });
   };
 
-  const loginWithGoogle = (): void => {
-    setLoading(true);
-    axios
-      .get("/api/v1/auth/google")
-      .then(async (res) => {
-        window.location.href = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const loginWithMicrosoft = (): void => {
-    setLoading(true);
-    axios
-      .get("/api/v1/auth/microsoft")
-      .then(async (res) => {
-        window.location.href = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   const loginWithMicrosoftResp = (code: string, state: string): void => {
     setLoading(true);
     setIsUserVerifcationCompleted(false);
     axios
       .get(`/api/v1/auth/microsoft/callback?code=${code}&state=${state}`)
       .then(async (res) => {
-        await getUserData();
+        console.log(res);
+        // await getUserData();
       })
       .catch((err) => {
         setIsUserVerifcationCompleted(true);
@@ -163,7 +108,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           type: ToastMessageEnumType.error,
           messgae: err.response.data.message,
         });
-        window.location.replace("/login");
+        // window.location.replace("/login");
       })
       .finally(() => {
         setLoading(false);
@@ -304,10 +249,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setLoading,
         isUserVerifcationCompleted,
         user,
-        login,
         loginWithOtp,
-        loginWithGoogle,
-        loginWithMicrosoft,
         loginWithGoogleResp,
         loginWithMicrosoftResp,
         sendOtp,

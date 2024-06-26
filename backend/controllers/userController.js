@@ -12,8 +12,6 @@ const axios = require("axios");
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { username, fullname, email, password } = req.body;
 
-  console.log(password, password.length);
-
   if (!password) return next(new ErrorHandler("User already signed in.", 400));
 
   if (password.length < 8)
@@ -63,26 +61,20 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("User already signed in.", 400));
   }
 
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return next(new ErrorHandler("Please enter username and password", 400));
+  if (!email || !password) {
+    return next(new ErrorHandler("Please enter email and password", 400));
   }
 
-  let user;
+  let user = await User.findOne({ email: email }).select("+password");
 
-  if (username) {
-    user = await User.findOne({ username: username }).select("+password");
-  } else {
-    user = await User.findOne({ email: username }).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("Invalid username or password", 400));
   }
 
-  if (username && !user) {
-    return next(new ErrorHandler("Username or password is incorrect.", 400));
-  }
-
-  if (!username && !user) {
-    return next(new ErrorHandler("Email or password is incorrect.", 400));
+  if (!user.password) {
+    return next(new ErrorHandler("Your login method is different", 400));
   }
 
   const isPasswordMatched = await user.comparePassword(password);
@@ -305,6 +297,7 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
         username: id,
         fullname: name,
         email: email,
+        password: null,
         isVerified: verified_email,
         picture: picture,
         googleId: id,
@@ -434,6 +427,8 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
       }
     );
 
+    console.log(tokenResponse);
+
     const { access_token, id_token } = tokenResponse.data;
 
     // Use the access token to get user data from Microsoft Graph
@@ -443,6 +438,8 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
         headers: { Authorization: `Bearer ${access_token}` },
       }
     );
+
+    console.log(profileResponse);
 
     const profile = profileResponse.data;
 
@@ -463,6 +460,7 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
         username: id,
         fullname: name,
         email: email,
+        password: null,
         isVerified: true,
         microsoftId: id,
         provider: "Microsoft",
