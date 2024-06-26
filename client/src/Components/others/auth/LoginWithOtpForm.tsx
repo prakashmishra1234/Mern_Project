@@ -1,4 +1,4 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Box, Button, Link, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import {
   LoginWithOtp,
@@ -36,42 +36,51 @@ const LoginWithOtpForm = () => {
   };
 
   const sendOtp = async (values: LoginWithOtpType) => {
-    return await getDataFromApi(
+    context.setLoading(true);
+    const data = await getDataFromApi(
       `/api/v1/sendOtp?email=${values.email}`,
-      ApiMethods.POST,
-      {},
-      values
+      ApiMethods.GET
     );
+    if (data.success) {
+      getToastMessage({
+        type: ToastMessageEnumType.success,
+        messgae: data.message,
+      });
+      navigateToOtpForm();
+    } else {
+      getToastMessage({
+        type: ToastMessageEnumType.error,
+        messgae: data.message,
+      });
+    }
+    context.setLoading(false);
   };
 
   const VerifyOtp = async (values: LoginWithOtpType) => {
-    return await getDataFromApi(
+    context.setLoading(true);
+    const data = await getDataFromApi(
       `/api/v1/verifyOtp`,
       ApiMethods.POST,
       {},
       values
     );
+    if (data.success) {
+      getToastMessage({
+        type: ToastMessageEnumType.success,
+        messgae: data.message,
+      });
+      navigateToOtpForm();
+    } else {
+      getToastMessage({
+        type: ToastMessageEnumType.error,
+        messgae: data.message,
+      });
+    }
+    context.setLoading(false);
   };
 
   const handleSubmit = async (values: LoginWithOtpType) => {
-    alert(1);
-    context.setLoading(true);
-    let data;
-    try {
-      data = values.formIndex === 0 ? sendOtp(values) : VerifyOtp(values);
-    } catch (error) {
-      console.log(error);
-    }
-
-    console.log(data);
-    // if (data.success) {
-    // } else {
-    //   getToastMessage({
-    //     type: ToastMessageEnumType.error,
-    //     messgae: data.message,
-    //   });
-    // }
-    context.setLoading(false);
+    values.formIndex === 0 ? await sendOtp(values) : await VerifyOtp(values);
   };
 
   const formik = useFormik({
@@ -139,6 +148,7 @@ const LoginWithOtpForm = () => {
                 sx={{
                   cursor: "pointer",
                 }}
+                onClick={() => sendOtp(formik.values)}
               >
                 Resend otp
               </Link>
