@@ -16,7 +16,6 @@ interface IContext {
   setIsUserVerifcationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
-  loginWithGoogleResp: (code: string) => void;
   loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
   logout: () => void;
@@ -29,7 +28,6 @@ const AuthContext = React.createContext<IContext>({
   setLoading: () => {},
   isUserVerifcationCompleted: false,
   setIsUserVerifcationCompleted: () => {},
-  loginWithGoogleResp: (code: string): void => {},
   loginWithMicrosoftResp: (code: string, state: string): void => {},
   signUp: (value: AuthSignUp): void => {},
   logout: (): void => {},
@@ -65,28 +63,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           messgae: err.response.data.message,
         });
         // window.location.replace("/login");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const loginWithGoogleResp = (code: string): void => {
-    setLoading(true);
-    setIsUserVerifcationCompleted(false);
-    axios
-      .get(`/api/v1/auth/google/callback?code=${code}`)
-      .then(async (res) => {
-        await getUserData();
-      })
-      .catch((err) => {
-        setIsUserVerifcationCompleted(true);
-        setUser(null);
-        getToastMessage({
-          type: ToastMessageEnumType.error,
-          messgae: err.response.data.message,
-        });
-        window.location.replace("/login");
       })
       .finally(() => {
         setLoading(false);
@@ -207,7 +183,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         setUser,
         setIsUserVerifcationCompleted,
         setLoading,
-        loginWithGoogleResp,
         loginWithMicrosoftResp,
         signUp,
         logout,

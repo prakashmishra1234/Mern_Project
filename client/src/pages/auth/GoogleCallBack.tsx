@@ -1,6 +1,8 @@
 import React from "react";
 import { AuthContext } from "../../Store";
 import { useLocation } from "react-router-dom";
+import { getDataFromApi } from "../../api/CustomApiCall";
+import { ApiMethods } from "../../enum/ApiMethods";
 
 const GoogleCallBack = () => {
   const context = React.useContext(AuthContext);
@@ -13,8 +15,15 @@ const GoogleCallBack = () => {
     return code ?? "";
   };
 
+  const loginWithGoogleResponse = async (code: string) => {
+    const data = await getDataFromApi(
+      `/api/v1/auth/google/callback?code=${code}`,
+      ApiMethods.GET
+    );
+  };
+
   React.useEffect(() => {
-    context.loginWithGoogleResp(getParamsValue());
+    loginWithGoogleResponse(getParamsValue());
   }, []);
   return <></>;
 };
