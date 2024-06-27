@@ -47,13 +47,15 @@ const AboutPage = () => {
   const AboutEditPage = (
     <React.Fragment>
       <Box width={"100%"} marginBottom={"auto"} marginTop={2}>
-        <Grid container width={"100%"} gap={2}>
+        <Grid container width={"100%"} gap={2} height={"auto"} mb={2}>
           <Grid
             item
             xs={12}
             display={"flex"}
             justifyContent={"center"}
-            height={"50vh"}
+            border={"1px solid gray"}
+            p={1}
+            minHeight={"350px"}
           >
             <CustomEditor state={html} setState={setHtml} />
           </Grid>
@@ -66,6 +68,7 @@ const AboutPage = () => {
           >
             <Button
               variant="outlined"
+              size="small"
               sx={{ borderRadius: "25px", mr: 2 }}
               onClick={stopEdit}
             >
@@ -73,6 +76,7 @@ const AboutPage = () => {
             </Button>
             <Button
               variant="outlined"
+              size="small"
               sx={{ borderRadius: "25px" }}
               onClick={startEdit}
             >
