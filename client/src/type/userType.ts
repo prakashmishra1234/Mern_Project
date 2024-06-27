@@ -6,5 +6,6 @@ export interface UserType {
   isVerified: boolean;
   role: string;
   createdAt: string;
+  picture: string;
   __v: number;
 }

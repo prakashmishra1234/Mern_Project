@@ -112,8 +112,8 @@ const Profile = () => {
             <IconButton sx={{ p: 0, height: "6rem", width: "6rem" }}>
               <Avatar
                 sx={{ height: "100%", width: "100%" }}
-                alt="Remy Sharp"
-                src={ProfileImg}
+                alt="Avatar"
+                src={context.user?.picture ? context.user?.picture : ProfileImg}
               />
             </IconButton>
             <Box sx={{ ml: { md: 0, xs: 2 } }}>
