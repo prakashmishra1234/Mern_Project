@@ -35,7 +35,7 @@ const CustomDailog: React.FC<React.PropsWithChildren<ICustomDailog>> = (
         keepMounted
         onClose={props.handleClose}
         aria-describedby="alert-dialog-slide-description"
-        PaperProps={{ sx: { minWidth: "50%" } }}
+        PaperProps={{ sx: { minWidth: { md: "50%", xs: "90%" } } }}
       >
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>

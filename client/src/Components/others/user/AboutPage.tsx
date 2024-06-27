@@ -64,7 +64,7 @@ const AboutPage = () => {
             justifyContent={"center"}
             border={"1px solid gray"}
             p={1}
-            minHeight={"350px"}
+            sx={{ minHeight: { md: "350px", xs: "415px" } }}
           >
             <CustomEditor state={html} setState={setHtml} />
           </Grid>
