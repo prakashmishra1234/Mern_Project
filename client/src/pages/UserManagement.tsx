@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { AuthContext } from "../Store";
 import { Alert, Card, Grid, Link, Typography } from "@mui/material";
-import { UserType } from "../type/UserType";
+import { UserType } from "../type/userType";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CustomPagination from "../Components/common/Pagination";
 import SearchBar from "../Components/common/SearchBar";

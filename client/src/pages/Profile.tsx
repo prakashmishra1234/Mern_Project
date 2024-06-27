@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Divider,
   Grid,
   IconButton,
   Link,
@@ -12,6 +13,8 @@ import {
 import { AuthContext } from "../Store";
 import React from "react";
 import ProfileImg from "../assets/profile-major.svg";
+import SettingsPage from "../Components/others/user/SettingsPage";
+import AboutPage from "../Components/others/user/AboutPage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -39,7 +42,7 @@ const Profile = () => {
         {...other}
       >
         {value === index && (
-          <Box sx={{ pl: 2 }}>
+          <Box sx={{}}>
             <Typography>{children}</Typography>
           </Box>
         )}
@@ -58,14 +61,12 @@ const Profile = () => {
     <Box height={"100%"}>
       <Grid
         container
-        sx={{ flexDirection: { xs: "column-reverse", md: "row !important" } }}
+        sx={{
+          flexDirection: { xs: "column-reverse", md: "row !important" },
+        }}
       >
         <Grid item xs={12} md={8}>
-          <Box
-            width={"100%"}
-            p={2}
-            sx={{ display: { md: "flex", xs: "none" } }}
-          >
+          <Box width={"100%"} sx={{ display: { md: "flex", xs: "none" } }}>
             <Typography
               fontSize={"2.5rem"}
               fontWeight={500}
@@ -90,10 +91,10 @@ const Profile = () => {
               Item One
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              Item Two
+              <AboutPage />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              Item Three
+              <SettingsPage />
             </CustomTabPanel>
           </Box>
         </Grid>

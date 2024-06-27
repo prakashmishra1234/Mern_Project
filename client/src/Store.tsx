@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserType } from "./type/UserType";
+import { UserType } from "./type/userType";
 import axios from "axios";
 import {
   AuthChangePassword,
