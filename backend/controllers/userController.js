@@ -249,45 +249,43 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
   const { code } = req.query;
 
   try {
-    const { data } = await axios.post("https://oauth2.googleapis.com/token", {
-      client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
-      client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-      code,
-      redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
-      grant_type: "authorization_code",
-      response_type: "code",
-    });
-
-    const { access_token, id_token } = data;
-
-    const { data: profile } = await axios.get(
-      "https://www.googleapis.com/oauth2/v1/userinfo",
+    const tokenResponse = await axios.post(
+      "https://oauth2.googleapis.com/token",
       {
-        headers: { Authorization: `Bearer ${id_token}` },
+        client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        code,
+        redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
+        grant_type: "authorization_code",
       }
     );
-    const { id, email, verified_email, name, picture } = profile;
 
-    let user = await User.findOne({ email: email });
+    const { access_token } = tokenResponse.data;
+
+    const profileResponse = await axios.get(
+      "https://www.googleapis.com/oauth2/v1/userinfo",
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
+      }
+    );
+
+    const { id, email, verified_email, name, picture } = profileResponse.data;
+
+    let user = await User.findOne({ email });
 
     if (user) {
       user.isVerified = verified_email;
       user.picture = picture;
       user.googleId = id;
-      if (!user.provider.includes("google"))
-        user.provider = user.provider
-          ? user.provider + "," + "google"
-          : "google";
     } else {
       user = await User.create({
         username: id,
         fullname: name,
-        email: email,
+        email,
         password: null,
         isVerified: verified_email,
-        picture: picture,
+        picture,
         googleId: id,
-        provider: "google",
       });
     }
 
@@ -295,7 +293,10 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
 
     sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
-    console.error("\n Error in google response : \n", error);
+    console.error(
+      "\n Error in Google response: \n",
+      error.response ? error.response.data : error.message
+    );
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });
@@ -384,17 +385,13 @@ exports.verifyOtp = catchAsyncError(async (req, res, next) => {
 
 // login with microsoft
 exports.loginWithMicrosoft = catchAsyncError(async (req, res, next) => {
-  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email User.Read User.Read.All&response_mode=query&nonce=nonce&state=${process.env.MICROSOFT_OAUTH_STATE}&prompt=select_account`;
+  const url = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${process.env.MICROSOFT_OAUTH_CLIENT_ID}&redirect_uri=${process.env.MICROSOFT_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email User.Read User.Read.All&response_mode=query&nonce=nonce&prompt=select_account`;
   sendData(url, 200, res, "Microsoft login initiated successfully.");
 });
 
 // login with microsoft response
 exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
-  const { code, state } = req.query;
-
-  if (state !== process.env.MICROSOFT_OAUTH_STATE) {
-    return next(new ErrorHandler("Invalid state parameter.", 400));
-  }
+  const { code } = req.query;
 
   try {
     // Exchange the authorization code for tokens
@@ -414,9 +411,7 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
       }
     );
 
-    console.log(tokenResponse);
-
-    const { access_token, id_token } = tokenResponse.data;
+    const { access_token } = tokenResponse.data;
 
     // Use the access token to get user data from Microsoft Graph
     const profileResponse = await axios.get(
@@ -425,8 +420,6 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
         headers: { Authorization: `Bearer ${access_token}` },
       }
     );
-
-    console.log(profileResponse);
 
     const profile = profileResponse.data;
 
@@ -438,10 +431,6 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
     if (user) {
       user.isVerified = true;
       user.microsoftId = id;
-      if (!user.provider.includes("microsoft"))
-        user.provider = user.provider
-          ? user.provider + "," + "microsoft"
-          : "microsoft";
     } else {
       user = await User.create({
         username: id,
@@ -450,7 +439,6 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
         password: null,
         isVerified: true,
         microsoftId: id,
-        provider: "Microsoft",
       });
     }
 
@@ -458,7 +446,11 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
 
     sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
-    console.error("\n Error in microsoft response : \n", error);
+    console.log(error);
+    console.error(
+      "\n Error in microsoft response : \n",
+      error.response ? error.response.data : error.message
+    );
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });

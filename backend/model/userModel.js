@@ -44,7 +44,6 @@ const userSchema = new mongoose.Schema({
   picture: String,
   googleId: String,
   microsoftId: String,
-  provider: String,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   emailVerificationToken: String,
@@ -55,7 +54,7 @@ const userSchema = new mongoose.Schema({
 
 //Password Hashing
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+  if (this.password == null || !this.isModified("password")) {
     next();
   }
   this.password = await bcrypt.hash(this.password, 10);

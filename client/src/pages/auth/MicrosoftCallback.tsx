@@ -1,33 +1,50 @@
 import React from "react";
 import { AuthContext } from "../../Store";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ApiMethods } from "../../enum/ApiMethods";
+import { getDataFromApi } from "../../api/CustomApiCall";
+import { getToastMessage } from "../../Components/common/ToastMessage";
+import { ToastMessageEnumType } from "../../enum/ToastMessage";
 
 const MicrosoftCallback = () => {
   const context = React.useContext(AuthContext);
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const getParamsValue = (
-    search: string
-  ): {
-    code: string | null;
-    state: string | null;
-  } => {
-    let params: {
-      code: string | null;
-      state: string | null;
-    } = {
-      code: "",
-      state: "",
-    };
-    const searchParams = new URLSearchParams(search);
-    params.code = searchParams.get("code");
-    params.state = searchParams.get("state");
-    return params;
+  const getParamsValue = (): string => {
+    let code: string | null = "";
+    const searchParams = new URLSearchParams(location.search);
+    code = searchParams.get("code");
+    return code ?? "";
+  };
+
+  const loginWithMicrosoftResponse = async (code: string) => {
+    context.setLoading(true);
+    const data = await getDataFromApi(
+      `/api/v1/auth/microsoft/callback?code=${code}`,
+      ApiMethods.GET
+    );
+
+    if (data.success) {
+      const user = await getDataFromApi("/api/v1/me", ApiMethods.GET);
+      if (user.success) {
+        context.setUser(user.data);
+        navigate("/home");
+      } else {
+        context.logout();
+      }
+    } else {
+      getToastMessage({
+        type: ToastMessageEnumType.error,
+        messgae: data.message,
+      });
+      navigate("/login");
+    }
+    context.setLoading(false);
   };
 
   React.useEffect(() => {
-    const params = getParamsValue(location.search);
-    context.loginWithMicrosoftResp(params.code ?? "", params.state ?? "");
+    loginWithMicrosoftResponse(getParamsValue());
   }, []);
 
   return <></>;
