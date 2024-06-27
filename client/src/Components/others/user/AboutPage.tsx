@@ -1,7 +1,9 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import React from "react";
+import { CustomEditor } from "../../common/CustomEditor";
 
 const AboutPage = () => {
+  const [html, setHtml] = React.useState("");
   const [startEditing, setStartEditing] = React.useState(false);
   const startEdit = () => {
     setStartEditing(true);
@@ -46,8 +48,14 @@ const AboutPage = () => {
     <React.Fragment>
       <Box width={"100%"} marginBottom={"auto"} marginTop={2}>
         <Grid container width={"100%"} gap={2}>
-          <Grid item xs={12} display={"flex"} justifyContent={"center"}>
-            <TextField multiline minRows={12} fullWidth autoFocus />
+          <Grid
+            item
+            xs={12}
+            display={"flex"}
+            justifyContent={"center"}
+            height={"50vh"}
+          >
+            <CustomEditor state={html} setState={setHtml} />
           </Grid>
           <Grid
             item
@@ -75,8 +83,6 @@ const AboutPage = () => {
       </Box>
     </React.Fragment>
   );
-
-  
 
   return (
     <Box

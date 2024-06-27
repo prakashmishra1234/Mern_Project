@@ -1,11 +1,9 @@
 import {
   Avatar,
   Box,
-  Divider,
   Grid,
   IconButton,
   Link,
-  Paper,
   Tab,
   Tabs,
   Typography,
