@@ -255,14 +255,15 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
       code,
       redirect_uri: process.env.GOOGLE_OAUTH_REDIRECT_URI,
       grant_type: "authorization_code",
+      response_type: "code",
     });
 
-    const { access_token } = data;
+    const { access_token, id_token } = data;
 
     const { data: profile } = await axios.get(
       "https://www.googleapis.com/oauth2/v1/userinfo",
       {
-        headers: { Authorization: `Bearer ${access_token}` },
+        headers: { Authorization: `Bearer ${id_token}` },
       }
     );
     const { id, email, verified_email, name, picture } = profile;
@@ -294,6 +295,7 @@ exports.loginWithGoogleRes = catchAsyncError(async (req, res, next) => {
 
     sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
+    console.error("\n Error in google response : \n", error);
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });
@@ -456,7 +458,7 @@ exports.loginWithMicrosoftRes = catchAsyncError(async (req, res, next) => {
 
     sendToken(user, 201, res, "User logged in successfully.");
   } catch (error) {
-    console.error("Error message:", error);
+    console.error("\n Error in microsoft response : \n", error);
     return next(new ErrorHandler("Something went wrong.", 400));
   }
 });
