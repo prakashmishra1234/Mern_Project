@@ -1,10 +1,19 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import React from "react";
 import { CustomEditor } from "../../common/CustomEditor";
+import CustomDailog from "../../common/CustomDailog";
 
 const AboutPage = () => {
+  const [dailogOpen, setDailogOpen] = React.useState(false);
   const [html, setHtml] = React.useState("");
   const [startEditing, setStartEditing] = React.useState(false);
+
+  const openDailog = () => {
+    setDailogOpen(true);
+  };
+  const closeDailog = () => {
+    setDailogOpen(false);
+  };
   const startEdit = () => {
     setStartEditing(true);
   };
@@ -77,14 +86,30 @@ const AboutPage = () => {
             <Button
               variant="outlined"
               size="small"
-              sx={{ borderRadius: "25px" }}
+              sx={{ borderRadius: "25px", mr: 2 }}
               onClick={startEdit}
             >
               Save
             </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ borderRadius: "25px" }}
+              onClick={openDailog}
+            >
+              Preview
+            </Button>
           </Grid>
         </Grid>
       </Box>
+      <CustomDailog
+        open={dailogOpen}
+        title="View"
+        handleClose={closeDailog}
+        handleOpen={openDailog}
+      >
+        <Box dangerouslySetInnerHTML={{ __html: html }} />
+      </CustomDailog>
     </React.Fragment>
   );
 
