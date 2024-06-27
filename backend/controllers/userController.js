@@ -26,25 +26,10 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     password,
   });
 
-  // send verification mail.
-  const verificationToken = user.getEmailVerificationToken();
-  await user.save({ validateBeforeSave: false });
-  const emailVerificationUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/verify-email/${verificationToken}`;
-  const message = `Your email verification link is :- <br/><br/> <a href="${emailVerificationUrl}">click here to verify your email</a> <br/><br/> If you have not requested this email then, please ignore it.`;
-  try {
-    await sendEmail({
-      email: user.email,
-      subject: `Mern_Project Email Verification`,
-      message,
-    });
-  } catch (error) {
-    user.emailVerificationToken = undefined;
-    user.emailVerificationExpire = undefined;
-    await user.save({ validateBeforeSave: false });
-    return next(new ErrorHandler(error.message, 500));
+  if (!user) {
+    new ErrorHandler("User registration failed.", 400);
   }
+
   sendToken(
     user,
     201,

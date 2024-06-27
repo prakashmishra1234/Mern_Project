@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Store";
+import ProfileImg from "../../../assets/profile-major.svg";
 
 const pages = ["Home"];
 const adminPages = ["Users"];
@@ -182,7 +183,7 @@ const Navbar = () => {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <Avatar alt="Remy Sharp" src={ProfileImg} />
             </IconButton>
           </Tooltip>
           <Menu

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { AuthContext } from "../Store";
 import React from "react";
+import ProfileImg from "../assets/profile-major.svg";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -112,7 +113,7 @@ const Profile = () => {
               <Avatar
                 sx={{ height: "100%", width: "100%" }}
                 alt="Remy Sharp"
-                src="/static/images/avatar/2.jpg"
+                src={ProfileImg}
               />
             </IconButton>
             <Box sx={{ ml: { md: 0, xs: 2 } }}>
