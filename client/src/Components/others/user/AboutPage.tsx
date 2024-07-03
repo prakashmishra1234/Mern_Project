@@ -5,6 +5,7 @@ import CustomDailog from "../../common/CustomDailog";
 import { getDataFromApi } from "../../../api/CustomApiCall";
 import { ApiMethods } from "../../../enum/ApiMethods";
 import { AuthContext } from "../../../Store";
+import { UserType } from "../../../type/userType";
 
 const AboutPage = () => {
   const context = React.useContext(AuthContext);
@@ -47,6 +48,10 @@ const AboutPage = () => {
         ...prevState,
         data: data.data,
       }));
+      context.setUser((prevState: any) => ({
+        ...prevState,
+        bio: data.data,
+      }));
       setHtml(data.data);
     }
     setUsersBio((prevState) => ({
@@ -73,6 +78,10 @@ const AboutPage = () => {
         ...prevState,
         data: data.data,
       }));
+      context.setUser((prevState: any) => ({
+        ...prevState,
+        bio: data.data,
+      }));
       setHtml(data.data);
     }
     setUsersBio((prevState) => ({
@@ -83,9 +92,12 @@ const AboutPage = () => {
   };
 
   React.useEffect(() => {
-    if (!context.user?.bio || context.user.bio === "") getUsersBio();
-    else
+    if (!context.user?.bio || context.user.bio === "") {
+      getUsersBio();
+    } else {
       setUsersBio((prevState) => ({ ...prevState, data: context.user?.bio }));
+      setHtml(context.user?.bio);
+    }
   }, []);
 
   const AboutCallBackPage = (
