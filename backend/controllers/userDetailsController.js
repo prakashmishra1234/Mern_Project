@@ -1,40 +1,86 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
-const UserDetails = require("../model/userDetailsModel");
+const User = require("../model/userModel");
 const ErrorHandler = require("../utils/errorHandler");
 const sendData = require("../utils/sendData");
 
 // Add bio
 exports.addBio = catchAsyncError(async (req, res, next) => {
   const { bio } = req.body;
-  const userId = req.user.id;
 
-  const user = await UserDetails.findOne({ user: userId });
-
-  let userDetails;
-  if (user) {
-    user.bio = bio;
-    userDetails = await user.save({ validateBeforeSave: false });
-  } else {
-    userDetails = await UserDetails.create({ bio, user: userId });
+  if (!bio) {
+    return next(new ErrorHandler("Bio is required.", 400));
   }
 
-  if (!userDetails) {
-    return next(new ErrorHandler("Users bio add failed.", 400));
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 400));
   }
 
-  sendData(userDetails, 200, res, "Bio added successfully.");
+  user.bio = bio;
+  user.save({ validateBeforeSave: false });
+
+  sendData(user, 200, res, "Bio added successfully.");
 });
 
 // get bio
 exports.getBio = catchAsyncError(async (req, res, next) => {
-  const bio = await UserDetails.findOne({ user: req.user._id });
+  const user = await User.findById(req.user.id);
 
-  if (!bio) {
-    return next(new ErrorHandler("Users bio not found.", 400));
+  if (!user) {
+    return next(new ErrorHandler("User not found.", 400));
   }
 
-  sendData(bio, 200, res, "Bio fetched successfully.");
+  sendData({ bio: user.bio }, 200, res, "Bio fetched successfully.");
 });
 
 // follow user
-exports.followUser = catchAsyncError(async (req, res, next) => {});
+exports.followUser = catchAsyncError(async (req, res, next) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return next(new ErrorHandler("userId is required.", 400));
+  }
+
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found.", 400));
+  }
+
+  const userToFollow = await User.findById(userId);
+
+  if (!userToFollow) {
+    return next(new ErrorHandler("User to follow not found.", 400));
+  }
+
+  if (!user.followings) {
+    user.followings = [];
+  }
+  if (!userToFollow.followers) {
+    userToFollow.followers = [];
+  }
+
+  if (user.followings.includes(userToFollow.id)) {
+    return next(
+      new ErrorHandler(
+        `You are already following ${userToFollow.fullname}.`,
+        400
+      )
+    );
+  }
+
+  await User.findByIdAndUpdate(
+    req.user.id,
+    { $addToSet: { followings: userToFollow.id } },
+    { new: true, runValidators: false }
+  );
+
+  await User.findByIdAndUpdate(
+    userToFollow.id,
+    { $addToSet: { followers: user.id } },
+    { new: true, runValidators: false }
+  );
+
+  sendData({}, 200, res, `You followed ${userToFollow.fullname}`);
+});

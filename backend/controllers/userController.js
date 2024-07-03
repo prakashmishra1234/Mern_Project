@@ -10,7 +10,7 @@ const axios = require("axios");
 
 // Register User
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-  const { username, fullname, email, password } = req.body;
+  const { fullname, email, password } = req.body;
 
   if (!password) return next(new ErrorHandler("Password is required.", 400));
 
@@ -20,7 +20,6 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     );
 
   const user = await User.create({
-    username,
     fullname,
     email,
     password,

@@ -7,11 +7,9 @@ export interface UserType {
   role: string;
   createdAt: string;
   picture: string;
-  __v: number;
-}
-
-export interface UserDetailsType {
-  _id: string;
   bio: string;
   user: string;
+  followers: string[];
+  followings: string[];
+  __v: number;
 }

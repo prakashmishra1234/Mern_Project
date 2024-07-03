@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.route("/addBio").post(isAuthenticateUser, addBio);
 router.route("/getBio").get(isAuthenticateUser, getBio);
-router.route("/followUser").get(isAuthenticateUser, followUser);
+router.route("/followUser").post(isAuthenticateUser, followUser);
 
 module.exports = router;
