@@ -37,3 +37,4 @@ exports.getBio = catchAsyncError(async (req, res, next) => {
 });
 
 // follow user
+exports.followUser = catchAsyncError(async (req, res, next) => {});
