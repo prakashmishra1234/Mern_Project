@@ -9,3 +9,9 @@ export interface UserType {
   picture: string;
   __v: number;
 }
+
+export interface UserDetailsType {
+  _id: string;
+  bio: string;
+  user: string;
+}

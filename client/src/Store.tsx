@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserType } from "./type/userType";
+import { UserDetailsType, UserType } from "./type/userType";
 import axios from "axios";
 import {
   AuthChangePassword,
@@ -16,6 +16,8 @@ interface IContext {
   setIsUserVerifcationCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
+  userDetails: UserDetailsType | null;
+  setUserDetails: React.Dispatch<React.SetStateAction<UserDetailsType | null>>;
   loginWithMicrosoftResp: (code: string, state: string) => void;
   signUp: (value: AuthSignUp) => void;
   logout: () => void;
@@ -38,6 +40,8 @@ const AuthContext = React.createContext<IContext>({
   ): void => {},
   user: null,
   setUser: () => {},
+  userDetails: null,
+  setUserDetails: () => {},
 });
 
 const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -45,6 +49,9 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
     React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
+  const [userDetails, setUserDetails] = React.useState<UserDetailsType | null>(
+    null
+  );
 
   const loginWithMicrosoftResp = (code: string, state: string): void => {
     setLoading(true);
@@ -181,6 +188,8 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         isUserVerifcationCompleted,
         user,
         setUser,
+        userDetails,
+        setUserDetails,
         setIsUserVerifcationCompleted,
         setLoading,
         loginWithMicrosoftResp,
