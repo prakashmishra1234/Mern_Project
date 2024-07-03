@@ -25,10 +25,10 @@ app.use(
 
 //Route import
 const user = require("./routes/userRoutes");
-const country = require("./routes/countryRoutes");
+const userDetails = require("./routes/userDetailsRoute");
 
 app.use("/api/v1", user);
-app.use("/api/v1", country);
+app.use("/api/v1", userDetails);
 app.set("trust proxy", 1);
 
 // static file

@@ -1,5 +1,5 @@
 import React from "react";
-import { EditorState } from "draft-js";
+import { ContentState, convertFromHTML, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import { stateToHTML } from "draft-js-export-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -54,6 +54,16 @@ export const CustomEditor: React.FC<ICustomEditor> = ({ state, setState }) => {
     return () => {
       window.removeEventListener("resize", handleSize);
     };
+  }, []);
+
+  React.useEffect(() => {
+    const blocksFromHTML = convertFromHTML(state);
+    const contentState = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap
+    );
+    const initialEditorState = EditorState.createWithContent(contentState);
+    setEditorState(initialEditorState);
   }, []);
 
   const editorStyle = {

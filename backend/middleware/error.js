@@ -1,7 +1,7 @@
 const ErrorHandler = require("../utils/errorHandler");
 
 module.exports = (err, req, res, next) => {
-  console.log(err);
+  console.log(err.statusCode);
   err.statusCode = err.statusCode || 500;
 
   // validation error

@@ -12,7 +12,7 @@ const axios = require("axios");
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { username, fullname, email, password } = req.body;
 
-  if (!password) return next(new ErrorHandler("User already signed in.", 400));
+  if (!password) return next(new ErrorHandler("Password is required.", 400));
 
   if (password.length < 8)
     return next(

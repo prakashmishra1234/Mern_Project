@@ -1,25 +1,88 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import React from "react";
 import { CustomEditor } from "../../common/CustomEditor";
 import CustomDailog from "../../common/CustomDailog";
+import { getDataFromApi } from "../../../api/CustomApiCall";
+import { ApiMethods } from "../../../enum/ApiMethods";
 
 const AboutPage = () => {
+  const [usersBio, setUsersBio] = React.useState<{
+    loading: boolean;
+    startEditing: boolean;
+    data: any;
+  }>({
+    loading: false,
+    startEditing: false,
+    data: null,
+  });
   const [dailogOpen, setDailogOpen] = React.useState(false);
   const [html, setHtml] = React.useState("");
-  const [startEditing, setStartEditing] = React.useState(false);
 
   const openDailog = () => {
     setDailogOpen(true);
   };
+
   const closeDailog = () => {
     setDailogOpen(false);
   };
+
   const startEdit = () => {
-    setStartEditing(true);
+    setUsersBio((prevState) => ({ ...prevState, startEditing: true }));
   };
+
   const stopEdit = () => {
-    setStartEditing(false);
+    setUsersBio((prevState) => ({ ...prevState, startEditing: false }));
   };
+
+  const getUsersBio = async () => {
+    setUsersBio((prevState) => ({
+      ...prevState,
+      loading: true,
+    }));
+    const data = await getDataFromApi("/api/v1/getBio", ApiMethods.GET);
+    if (data.success && data.data) {
+      setUsersBio((prevState) => ({
+        ...prevState,
+        data: data.data,
+      }));
+      setHtml(data.data.bio);
+    }
+    setUsersBio((prevState) => ({
+      ...prevState,
+      loading: false,
+    }));
+  };
+
+  const AddEditUsersBio = async (value: string) => {
+    setUsersBio((prevState) => ({
+      ...prevState,
+      loading: true,
+    }));
+    const data = await getDataFromApi(
+      "/api/v1/addBio",
+      ApiMethods.POST,
+      {},
+      {
+        bio: value,
+      }
+    );
+    if (data.success && data.data) {
+      setUsersBio((prevState) => ({
+        ...prevState,
+        data: data.data,
+      }));
+      setHtml(data.data.bio);
+    }
+    setUsersBio((prevState) => ({
+      ...prevState,
+      loading: false,
+    }));
+    stopEdit();
+  };
+
+  React.useEffect(() => {
+    getUsersBio();
+  }, []);
 
   const AboutCallBackPage = (
     <Box
@@ -51,6 +114,44 @@ const AboutPage = () => {
         Get Started
       </Button>
     </Box>
+  );
+
+  const loaderJSX = (
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <CircularProgress thickness={2.5} />
+    </Box>
+  );
+
+  const BioJSX = (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Box
+          sx={{
+            height: "50vh",
+            background: "#0000000a",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "20PX",
+            px: 6,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: usersBio.data ? usersBio.data.bio : "",
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} display={"flex"} justifyContent={"flex-end"}>
+        <Button
+          variant="outlined"
+          onClick={startEdit}
+          sx={{ borderRadius: "25px" }}
+        >
+          Edit
+        </Button>
+      </Grid>
+    </Grid>
   );
 
   const AboutEditPage = (
@@ -87,7 +188,9 @@ const AboutPage = () => {
               variant="outlined"
               size="small"
               sx={{ borderRadius: "25px", mr: 2 }}
-              onClick={startEdit}
+              onClick={() => {
+                AddEditUsersBio(html);
+              }}
             >
               Save
             </Button>
@@ -122,8 +225,21 @@ const AboutPage = () => {
         height: "63vh",
       }}
     >
-      {!startEditing && AboutCallBackPage}
-      {startEditing && AboutEditPage}
+      {usersBio.loading ? (
+        loaderJSX
+      ) : (
+        <React.Fragment>
+          {usersBio.data ? (
+            <React.Fragment>
+              {usersBio.startEditing ? AboutEditPage : BioJSX}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              {usersBio.startEditing ? AboutEditPage : AboutCallBackPage}
+            </React.Fragment>
+          )}
+        </React.Fragment>
+      )}
     </Box>
   );
 };
