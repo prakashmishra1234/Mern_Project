@@ -33,5 +33,5 @@ exports.getBio = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Users bio not found.", 400));
   }
 
-  sendData(bio, 200, res, "Bio added successfully.");
+  sendData(bio, 200, res, "Bio fetched successfully.");
 });
