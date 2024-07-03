@@ -7,6 +7,18 @@ const userDetailsSchema = new mongoose.Schema({
     maxlength: [1000, "Bio can not exceed 1000 characters."],
     minlength: [500, "Bio should have at least 500 characters."],
   },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     unique: true,

@@ -35,3 +35,5 @@ exports.getBio = catchAsyncError(async (req, res, next) => {
 
   sendData(bio, 200, res, "Bio fetched successfully.");
 });
+
+// follow user
