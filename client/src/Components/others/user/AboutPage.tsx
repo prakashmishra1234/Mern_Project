@@ -4,8 +4,10 @@ import { CustomEditor } from "../../common/CustomEditor";
 import CustomDailog from "../../common/CustomDailog";
 import { getDataFromApi } from "../../../api/CustomApiCall";
 import { ApiMethods } from "../../../enum/ApiMethods";
+import { AuthContext } from "../../../Store";
 
 const AboutPage = () => {
+  const context = React.useContext(AuthContext);
   const [usersBio, setUsersBio] = React.useState<{
     loading: boolean;
     startEditing: boolean;
@@ -45,7 +47,7 @@ const AboutPage = () => {
         ...prevState,
         data: data.data,
       }));
-      setHtml(data.data.bio);
+      setHtml(data.data);
     }
     setUsersBio((prevState) => ({
       ...prevState,
@@ -71,7 +73,7 @@ const AboutPage = () => {
         ...prevState,
         data: data.data,
       }));
-      setHtml(data.data.bio);
+      setHtml(data.data);
     }
     setUsersBio((prevState) => ({
       ...prevState,
@@ -81,7 +83,9 @@ const AboutPage = () => {
   };
 
   React.useEffect(() => {
-    getUsersBio();
+    if (!context.user?.bio || context.user.bio === "") getUsersBio();
+    else
+      setUsersBio((prevState) => ({ ...prevState, data: context.user?.bio }));
   }, []);
 
   const AboutCallBackPage = (
@@ -138,7 +142,7 @@ const AboutPage = () => {
             px: 6,
           }}
           dangerouslySetInnerHTML={{
-            __html: usersBio.data ? usersBio.data.bio : "",
+            __html: usersBio.data ? usersBio.data : "",
           }}
         />
       </Grid>

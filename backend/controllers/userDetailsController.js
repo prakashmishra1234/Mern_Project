@@ -20,7 +20,7 @@ exports.addBio = catchAsyncError(async (req, res, next) => {
   user.bio = bio;
   user.save({ validateBeforeSave: false });
 
-  sendData(user, 200, res, "Bio added successfully.");
+  sendData(user.bio, 200, res, "Bio added successfully.");
 });
 
 // get bio
@@ -30,8 +30,7 @@ exports.getBio = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler("User not found.", 400));
   }
-
-  sendData({ bio: user.bio }, 200, res, "Bio fetched successfully.");
+  sendData(user.bio, 200, res, "Bio fetched successfully.");
 });
 
 // follow user

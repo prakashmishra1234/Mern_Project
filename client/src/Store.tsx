@@ -45,9 +45,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isUserVerifcationCompleted, setIsUserVerifcationCompleted] =
     React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
-  const [userDetails, setUserDetails] = React.useState<UserDetailsType | null>(
-    null
-  );
 
   const loginWithMicrosoftResp = (code: string, state: string): void => {
     setLoading(true);
@@ -115,6 +112,7 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get("/api/v1/me")
       .then((res) => {
+        console.log(res.data.data);
         setUser(res.data.data as UserType);
       })
       .catch((err) => {
