@@ -54,12 +54,28 @@ const Profile = () => {
   const followersFollowingsCount = React.useMemo(() => {
     return (
       <React.Fragment>
-        <Typography sx={{ mt: { xs: 0, md: 2 } }} fontFamily={"math"}>
-          {context.user?.followers.length ?? 0} Followers
-        </Typography>
-        <Typography fontFamily={"math"}>
+        <Link
+          sx={{
+            mt: { xs: 0, md: 2 },
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+          fontFamily={"math"}
+          display={"flex"}
+          alignItems={"center"}
+          onClick={() => alert("Followers list comming soon...")}
+        >
+          {context.user?.followers.length ?? 0} Followers{" "}
+        </Link>
+        <Link
+          fontFamily={"math"}
+          display={"flex"}
+          alignItems={"center"}
+          sx={{ cursor: "pointer", textDecoration: "none" }}
+          onClick={() => alert("Followings list comming soon...")}
+        >
           {context.user?.followings.length ?? 0} Followings
-        </Typography>
+        </Link>
       </React.Fragment>
     );
   }, [context.user?.followings, context.user?.followers]);
