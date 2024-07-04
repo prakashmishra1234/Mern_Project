@@ -158,12 +158,15 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 // get all user only for admin
 exports.getAllUser = catchAsyncError(async (req, res, next) => {
   const resultPerPage = 10;
-  const userCount = await User.countDocuments();
+  const userCount = (await User.countDocuments()) - 1;
   const apiFeature = new ApiFeatures(User.find(), req.query)
     .search()
     .filter()
     .pagination(resultPerPage);
-  const users = await apiFeature.query;
+  let users = await apiFeature.query;
+  users = users.filter((item) => {
+    return item.id !== req.user.id;
+  });
   const data = {
     users: users,
     resultPerPage,

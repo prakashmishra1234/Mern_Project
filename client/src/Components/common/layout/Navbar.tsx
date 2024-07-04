@@ -17,9 +17,9 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Store";
 import ProfileImg from "../../../assets/profile-major.svg";
 
-const pages = ["Home"];
-const adminPages = ["Users"];
-const settings = ["Profile"];
+const pages: string[] = ["Home", "Users"];
+const adminPages: string[] = [];
+const settings: string[] = ["Profile"];
 
 const Navbar = () => {
   const context = useContext(AuthContext);

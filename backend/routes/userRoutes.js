@@ -36,8 +36,6 @@ router
   .get(isAuthenticateUser, sendEmailVerificationLink);
 router.route("/verifyEmail/:token").get(verifyEmail);
 router.route("/me").get(isAuthenticateUser, getUserDetails);
-router
-  .route("/users")
-  .get(isAuthenticateUser, authorizeRoles("admin"), getAllUser);
+router.route("/users").get(isAuthenticateUser, getAllUser);
 
 module.exports = router;
