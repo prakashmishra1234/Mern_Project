@@ -120,7 +120,12 @@ const UserManagement = () => {
                         </IconButton>
                       </Grid>
                       <Grid item xs={9}>
-                        <Typography fontSize={"small"} display="flex">
+                        <Typography
+                          fontSize={"small"}
+                          display="flex"
+                          sx={{ fontSize: "18px" }}
+                          alignItems={"center"}
+                        >
                           {user.fullname}
                           {user.isVerified && (
                             <VerifiedIcon

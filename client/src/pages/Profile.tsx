@@ -54,11 +54,11 @@ const Profile = () => {
   const followersFollowingsCount = React.useMemo(() => {
     return (
       <React.Fragment>
-        <Typography mt={1} fontFamily={"math"}>
-          {context.user?.followers.length ?? 0} Follower
+        <Typography sx={{ mt: { xs: 0, md: 2 } }} fontFamily={"math"}>
+          {context.user?.followers.length ?? 0} Followers
         </Typography>
         <Typography fontFamily={"math"}>
-          {context.user?.followings.length ?? 0} Following
+          {context.user?.followings.length ?? 0} Followings
         </Typography>
       </React.Fragment>
     );
@@ -126,21 +126,20 @@ const Profile = () => {
             </IconButton>
             <Box sx={{ ml: { md: 0, xs: 2 } }}>
               <Typography
-                mt={2}
+                sx={{ mt: { xs: 0.5, md: 2 } }}
                 fontFamily={"math"}
                 fontSize={"22px"}
                 fontWeight={500}
               >
                 {context.user?.fullname}
               </Typography>
+              <Typography
+                sx={{ display: { md: "flex", xs: "none" } }}
+                fontFamily={"math"}
+              >
+                Software Developer
+              </Typography>
               {followersFollowingsCount}
-            </Box>
-            <Box
-              mt={2}
-              width={"100%"}
-              sx={{ display: { md: "flex", xs: "none" } }}
-            >
-              <Typography fontFamily={"math"}>Software Developer</Typography>
             </Box>
             <Box
               mt={4}
