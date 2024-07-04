@@ -189,11 +189,14 @@ const AboutPage = () => {
       </Box>
       <CustomDailog
         open={dailogOpen}
-        title="View"
+        title="Your Bio"
         handleClose={closeDailog}
         handleOpen={openDailog}
       >
         <Box dangerouslySetInnerHTML={{ __html: html }} />
+        <Button size="small" variant="outlined" onClick={closeDailog}>
+          Close
+        </Button>
       </CustomDailog>
     </React.Fragment>
   );

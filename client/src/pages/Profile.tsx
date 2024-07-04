@@ -39,11 +39,7 @@ const Profile = () => {
         aria-labelledby={`simple-tab-${index}`}
         {...other}
       >
-        {value === index && (
-          <Box sx={{}}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
+        {value === index && <Box sx={{}}>{children}</Box>}
       </div>
     );
   }
@@ -54,6 +50,19 @@ const Profile = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
+
+  const followersFollowingsCount = React.useMemo(() => {
+    return (
+      <React.Fragment>
+        <Typography mt={1} fontFamily={"math"}>
+          {context.user?.followers.length ?? 0} Follower
+        </Typography>
+        <Typography mt={1} fontFamily={"math"}>
+          {context.user?.followings.length ?? 0} Following
+        </Typography>
+      </React.Fragment>
+    );
+  }, [context.user?.followings, context.user?.followers]);
 
   return (
     <Box height={"100%"}>
@@ -124,9 +133,7 @@ const Profile = () => {
               >
                 {context.user?.fullname}
               </Typography>
-              <Typography mt={1} fontFamily={"math"}>
-                0 Follower
-              </Typography>
+              {followersFollowingsCount}
             </Box>
             <Box
               mt={2}

@@ -4,6 +4,7 @@ import { AuthContext } from "../Store";
 import {
   Alert,
   Avatar,
+  Box,
   Button,
   Card,
   Grid,
@@ -19,12 +20,22 @@ import { SearchModel } from "../type/SearchType";
 import { getDataFromApi } from "../api/CustomApiCall";
 import { ApiMethods } from "../enum/ApiMethods";
 import ProfileImg from "../assets/profile-major.svg";
+import CustomDailog from "../Components/common/CustomDailog";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
+  const [dailogOpen, setDailogOpen] = React.useState(false);
   const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
+
+  const openDailog = () => {
+    setDailogOpen(true);
+  };
+
+  const closeDailog = () => {
+    setDailogOpen(false);
+  };
 
   const getUsersList = async (searchKeyWord: string) => {
     context.setLoading(true);
@@ -65,6 +76,10 @@ const UserManagement = () => {
         }
       }
     }
+  };
+
+  const unfollowUsers = async (id: string) => {
+    alert("Unfollow comming soon...");
   };
 
   const handlePaginationChanges = (
@@ -117,7 +132,10 @@ const UserManagement = () => {
 
                         {!user.followers.includes(context.user?._id ?? "") ? (
                           <Link
-                            sx={{ textDecoration: "none", cursor: "pointer" }}
+                            sx={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                            }}
                             onClick={() => followUsers(user._id)}
                           >
                             Follow
@@ -125,6 +143,7 @@ const UserManagement = () => {
                         ) : (
                           <Link
                             sx={{ textDecoration: "none", cursor: "pointer" }}
+                            onClick={openDailog}
                           >
                             Following
                           </Link>
@@ -160,6 +179,27 @@ const UserManagement = () => {
           </Grid>
         </Grid>
       )}
+      <CustomDailog
+        open={dailogOpen}
+        handleClose={closeDailog}
+        handleOpen={openDailog}
+      >
+        <Typography>Are you sure you want to unfollow?</Typography>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Link
+            sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
+            onClick={() => unfollowUsers("dfdfgdg")}
+          >
+            Yes
+          </Link>
+          <Link
+            sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
+            onClick={closeDailog}
+          >
+            No
+          </Link>
+        </Box>
+      </CustomDailog>
     </React.Fragment>
   );
 };

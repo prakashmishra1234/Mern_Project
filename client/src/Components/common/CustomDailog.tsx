@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(
 interface ICustomDailog {
   handleOpen: () => void;
   handleClose: () => void;
-  title: string;
+  title?: string;
   open: boolean;
 }
 
@@ -37,17 +37,12 @@ const CustomDailog: React.FC<React.PropsWithChildren<ICustomDailog>> = (
         aria-describedby="alert-dialog-slide-description"
         PaperProps={{ sx: { minWidth: { md: "50%", xs: "90%" } } }}
       >
-        <DialogTitle>{props.title}</DialogTitle>
+        {props.title && <DialogTitle>{props.title}</DialogTitle>}
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {props.children}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" size="small" onClick={props.handleClose}>
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
     </React.Fragment>
   );
