@@ -13,6 +13,8 @@ import React from "react";
 import ProfileImg from "../assets/profile-major.svg";
 import SettingsPage from "../Components/others/user/SettingsPage";
 import AboutPage from "../Components/others/user/AboutPage";
+import CustomDailog from "../Components/common/CustomDailog";
+import FollowersList from "../Components/others/user/FollowersList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -22,10 +24,28 @@ interface TabPanelProps {
 
 const Profile = () => {
   const context = React.useContext(AuthContext);
+  const [followersdailogOpen, setFollowersDailogOpen] = React.useState(false);
+  const [followingsdailogOpen, setFollowingsDailogOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const openFollowingsDailog = () => {
+    setFollowingsDailogOpen(true);
+  };
+
+  const closeFollowingsDailog = () => {
+    setFollowingsDailogOpen(false);
+  };
+
+  const openFollowersDailog = () => {
+    setFollowersDailogOpen(true);
+  };
+
+  const closeFollowersDailog = () => {
+    setFollowersDailogOpen(false);
   };
 
   function CustomTabPanel(props: TabPanelProps) {
@@ -63,7 +83,7 @@ const Profile = () => {
           fontFamily={"math"}
           display={"flex"}
           alignItems={"center"}
-          onClick={() => alert("Followers list comming soon...")}
+          onClick={() => openFollowersDailog()}
         >
           {context.user?.followers.length ?? 0} Followers{" "}
         </Link>
@@ -77,7 +97,7 @@ const Profile = () => {
             color: "rgba(0, 0, 0, 0.87)",
             ml: 2,
           }}
-          onClick={() => alert("Followings list comming soon...")}
+          onClick={() => openFollowingsDailog()}
         >
           {context.user?.followings.length ?? 0} Followings
         </Link>
@@ -174,6 +194,22 @@ const Profile = () => {
           </Box>
         </Grid>
       </Grid>
+      <CustomDailog
+        open={followersdailogOpen}
+        handleClose={closeFollowersDailog}
+        handleOpen={openFollowersDailog}
+        title="Followers"
+      >
+        <FollowersList />
+      </CustomDailog>
+      <CustomDailog
+        open={followingsdailogOpen}
+        handleClose={closeFollowingsDailog}
+        handleOpen={openFollowingsDailog}
+        title="Followings"
+      >
+        <FollowersList />
+      </CustomDailog>
     </Box>
   );
 };

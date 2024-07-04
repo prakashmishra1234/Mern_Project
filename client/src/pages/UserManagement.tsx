@@ -1,11 +1,9 @@
-import axios from "axios";
 import React from "react";
 import { AuthContext } from "../Store";
 import {
   Alert,
   Avatar,
   Box,
-  Button,
   Card,
   Grid,
   IconButton,
@@ -21,10 +19,13 @@ import { getDataFromApi } from "../api/CustomApiCall";
 import { ApiMethods } from "../enum/ApiMethods";
 import ProfileImg from "../assets/profile-major.svg";
 import CustomDailog from "../Components/common/CustomDailog";
+import FollowersList from "../Components/others/user/FollowersList";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
   const [dailogOpen, setDailogOpen] = React.useState(false);
+  const [followersdailogOpen, setFollowersDailogOpen] = React.useState(false);
+  const [followingsdailogOpen, setFollowingsDailogOpen] = React.useState(false);
   const [userToUnfollow, setUserToUnfollow] = React.useState("");
   const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -46,6 +47,22 @@ const UserManagement = () => {
 
   const closeDailog = () => {
     setDailogOpen(false);
+  };
+
+  const openFollowersDailog = () => {
+    setFollowersDailogOpen(true);
+  };
+
+  const closeFollowersDailog = () => {
+    setFollowersDailogOpen(false);
+  };
+
+  const openFollowingsDailog = () => {
+    setFollowingsDailogOpen(true);
+  };
+
+  const closeFollowingsDailog = () => {
+    setFollowingsDailogOpen(false);
   };
 
   const getUsersList = async (searchKeyWord: string) => {
@@ -182,9 +199,7 @@ const UserManagement = () => {
                             fontFamily={"math"}
                             display={"flex"}
                             alignItems={"center"}
-                            onClick={() =>
-                              alert("Followers list comming soon...")
-                            }
+                            onClick={() => openFollowersDailog()}
                           >
                             {user.followers.length ?? 0} Followers{" "}
                           </Link>
@@ -198,9 +213,7 @@ const UserManagement = () => {
                               textDecoration: "none",
                               color: "rgba(0, 0, 0, 0.87)",
                             }}
-                            onClick={() =>
-                              alert("Followings list comming soon...")
-                            }
+                            onClick={() => openFollowingsDailog()}
                           >
                             {user.followings.length ?? 0} Followings
                           </Link>
@@ -277,6 +290,22 @@ const UserManagement = () => {
             No
           </Link>
         </Box>
+      </CustomDailog>
+      <CustomDailog
+        open={followersdailogOpen}
+        handleClose={closeFollowersDailog}
+        handleOpen={openFollowersDailog}
+        title="Followers"
+      >
+        <FollowersList />
+      </CustomDailog>
+      <CustomDailog
+        open={followingsdailogOpen}
+        handleClose={closeFollowingsDailog}
+        handleOpen={openFollowingsDailog}
+        title="Followings"
+      >
+        <FollowersList />
       </CustomDailog>
     </React.Fragment>
   );
