@@ -25,9 +25,20 @@ import CustomDailog from "../Components/common/CustomDailog";
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
   const [dailogOpen, setDailogOpen] = React.useState(false);
+  const [userToUnfollow, setUserToUnfollow] = React.useState("");
   const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
+
+  const UnFollowConfirmation = (id: string) => {
+    setUserToUnfollow(id);
+    openDailog();
+  };
+
+  const UnFollowDeclined = () => {
+    setUserToUnfollow("");
+    closeDailog();
+  };
 
   const openDailog = () => {
     setDailogOpen(true);
@@ -79,7 +90,34 @@ const UserManagement = () => {
   };
 
   const unfollowUsers = async (id: string) => {
-    alert("Unfollow comming soon...");
+    const data = await getDataFromApi(
+      "/api/v1/unFollowUser",
+      ApiMethods.POST,
+      {},
+      { userId: id }
+    );
+    if (data.success && data.data) {
+      if (context.user) {
+        let temp = [...context.user.followings];
+        const index = temp.indexOf(id);
+        temp.splice(index, 1);
+        context.setUser((prevState: any) => ({
+          ...prevState,
+          followings: temp,
+        }));
+        if (users) {
+          const temp2: UserType[] = [...users];
+          temp2.map((item) => {
+            if (item._id === id) {
+              const index = temp.indexOf(id);
+              item.followers.splice(index, 1);
+            }
+          });
+          setUsers(temp2);
+        }
+      }
+    }
+    closeDailog();
   };
 
   const handlePaginationChanges = (
@@ -134,7 +172,39 @@ const UserManagement = () => {
                             />
                           )}
                         </Typography>
-
+                        <Box display={"flex"} sx={{ mb: { xs: 1 } }}>
+                          <Link
+                            sx={{
+                              cursor: "pointer",
+                              textDecoration: "none",
+                              color: "rgba(0, 0, 0, 0.87)",
+                            }}
+                            fontFamily={"math"}
+                            display={"flex"}
+                            alignItems={"center"}
+                            onClick={() =>
+                              alert("Followers list comming soon...")
+                            }
+                          >
+                            {user.followers.length ?? 0} Followers{" "}
+                          </Link>
+                          <Link
+                            fontFamily={"math"}
+                            display={"flex"}
+                            alignItems={"center"}
+                            sx={{
+                              ml: 2,
+                              cursor: "pointer",
+                              textDecoration: "none",
+                              color: "rgba(0, 0, 0, 0.87)",
+                            }}
+                            onClick={() =>
+                              alert("Followings list comming soon...")
+                            }
+                          >
+                            {user.followings.length ?? 0} Followings
+                          </Link>
+                        </Box>
                         {!user.followers.includes(context.user?._id ?? "") ? (
                           <Link
                             sx={{
@@ -147,8 +217,11 @@ const UserManagement = () => {
                           </Link>
                         ) : (
                           <Link
-                            sx={{ textDecoration: "none", cursor: "pointer" }}
-                            onClick={openDailog}
+                            sx={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => UnFollowConfirmation(user._id)}
                           >
                             Following
                           </Link>
@@ -193,13 +266,13 @@ const UserManagement = () => {
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
             sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
-            onClick={() => unfollowUsers("dfdfgdg")}
+            onClick={() => unfollowUsers(userToUnfollow)}
           >
             Yes
           </Link>
           <Link
             sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
-            onClick={closeDailog}
+            onClick={UnFollowDeclined}
           >
             No
           </Link>

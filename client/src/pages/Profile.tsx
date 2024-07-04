@@ -53,12 +53,12 @@ const Profile = () => {
 
   const followersFollowingsCount = React.useMemo(() => {
     return (
-      <React.Fragment>
+      <Box display={"flex"} sx={{ mt: { xs: 0, md: 2 }, mb: { xs: 1, md: 0 } }}>
         <Link
           sx={{
-            mt: { xs: 0, md: 2 },
             cursor: "pointer",
             textDecoration: "none",
+            color: "rgba(0, 0, 0, 0.87)",
           }}
           fontFamily={"math"}
           display={"flex"}
@@ -71,12 +71,17 @@ const Profile = () => {
           fontFamily={"math"}
           display={"flex"}
           alignItems={"center"}
-          sx={{ cursor: "pointer", textDecoration: "none" }}
+          sx={{
+            cursor: "pointer",
+            textDecoration: "none",
+            color: "rgba(0, 0, 0, 0.87)",
+            ml: 2,
+          }}
           onClick={() => alert("Followings list comming soon...")}
         >
           {context.user?.followings.length ?? 0} Followings
         </Link>
-      </React.Fragment>
+      </Box>
     );
   }, [context.user?.followings, context.user?.followers]);
 
