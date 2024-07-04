@@ -41,6 +41,10 @@ exports.followUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("userId is required.", 400));
   }
 
+  if (req.user.id === userId) {
+    return next(new ErrorHandler("You can not follow yourself.", 400));
+  }
+
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -82,4 +86,49 @@ exports.followUser = catchAsyncError(async (req, res, next) => {
   );
 
   sendData({}, 200, res, `You followed ${userToFollow.fullname}`);
+});
+
+// unfollow users
+exports.unfollowUser = catchAsyncError(async (req, res, next) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    return next(new ErrorHandler("userId is required.", 400));
+  }
+
+  if (req.user.id === userId) {
+    return next(new ErrorHandler("You can not unfollow yourself.", 400));
+  }
+
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found.", 400));
+  }
+
+  const userToUnFollow = await User.findById(userId);
+
+  if (!userToUnFollow) {
+    return next(new ErrorHandler("User to follow not found.", 400));
+  }
+
+  if (!userToUnFollow.followers.includes(user.id)) {
+    return next(
+      new ErrorHandler(`You are not following ${userToUnFollow.fullname}.`, 400)
+    );
+  }
+
+  await User.findByIdAndUpdate(
+    req.user.id,
+    { $pull: { followings: userToUnFollow.id } },
+    { new: true, runValidators: false }
+  );
+
+  await User.findByIdAndUpdate(
+    userToUnFollow.id,
+    { $pull: { followers: user.id } },
+    { new: true, runValidators: false }
+  );
+
+  sendData({}, 200, res, `You unfollowed ${userToUnFollow.fullname}`);
 });
