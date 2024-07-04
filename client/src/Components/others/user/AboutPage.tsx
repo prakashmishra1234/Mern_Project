@@ -12,14 +12,14 @@ const AboutPage = () => {
   const [usersBio, setUsersBio] = React.useState<{
     loading: boolean;
     startEditing: boolean;
-    data: any;
   }>({
     loading: false,
     startEditing: false,
-    data: null,
   });
   const [dailogOpen, setDailogOpen] = React.useState(false);
-  const [html, setHtml] = React.useState("");
+  const [html, setHtml] = React.useState(() => {
+    return context.user?.bio ?? "";
+  });
 
   const openDailog = () => {
     setDailogOpen(true);
@@ -37,29 +37,6 @@ const AboutPage = () => {
     setUsersBio((prevState) => ({ ...prevState, startEditing: false }));
   };
 
-  const getUsersBio = async () => {
-    setUsersBio((prevState) => ({
-      ...prevState,
-      loading: true,
-    }));
-    const data = await getDataFromApi("/api/v1/getBio", ApiMethods.GET);
-    if (data.success && data.data) {
-      setUsersBio((prevState) => ({
-        ...prevState,
-        data: data.data,
-      }));
-      context.setUser((prevState: any) => ({
-        ...prevState,
-        bio: data.data,
-      }));
-      setHtml(data.data);
-    }
-    setUsersBio((prevState) => ({
-      ...prevState,
-      loading: false,
-    }));
-  };
-
   const AddEditUsersBio = async (value: string) => {
     setUsersBio((prevState) => ({
       ...prevState,
@@ -74,10 +51,6 @@ const AboutPage = () => {
       }
     );
     if (data.success && data.data) {
-      setUsersBio((prevState) => ({
-        ...prevState,
-        data: data.data,
-      }));
       context.setUser((prevState: any) => ({
         ...prevState,
         bio: data.data,
@@ -90,15 +63,6 @@ const AboutPage = () => {
     }));
     stopEdit();
   };
-
-  React.useEffect(() => {
-    if (!context.user?.bio || context.user.bio === "") {
-      getUsersBio();
-    } else {
-      setUsersBio((prevState) => ({ ...prevState, data: context.user?.bio }));
-      setHtml(context.user?.bio);
-    }
-  }, []);
 
   const AboutCallBackPage = (
     <Box
@@ -123,6 +87,7 @@ const AboutPage = () => {
         add images and use rich text to personalize your bio.
       </Typography>
       <Button
+        size="small"
         variant="outlined"
         sx={{ borderRadius: "25px" }}
         onClick={startEdit}
@@ -154,12 +119,13 @@ const AboutPage = () => {
             px: 6,
           }}
           dangerouslySetInnerHTML={{
-            __html: usersBio.data ? usersBio.data : "",
+            __html: context.user?.bio ? context.user?.bio : "",
           }}
         />
       </Grid>
       <Grid item xs={12} display={"flex"} justifyContent={"flex-end"}>
         <Button
+          size="small"
           variant="outlined"
           onClick={startEdit}
           sx={{ borderRadius: "25px" }}
@@ -193,16 +159,16 @@ const AboutPage = () => {
             alignItems={"center"}
           >
             <Button
-              variant="outlined"
               size="small"
+              variant="outlined"
               sx={{ borderRadius: "25px", mr: 2 }}
               onClick={stopEdit}
             >
               Cancel
             </Button>
             <Button
-              variant="outlined"
               size="small"
+              variant="outlined"
               sx={{ borderRadius: "25px", mr: 2 }}
               onClick={() => {
                 AddEditUsersBio(html);
@@ -211,8 +177,8 @@ const AboutPage = () => {
               Save
             </Button>
             <Button
-              variant="outlined"
               size="small"
+              variant="outlined"
               sx={{ borderRadius: "25px" }}
               onClick={openDailog}
             >
@@ -245,7 +211,7 @@ const AboutPage = () => {
         loaderJSX
       ) : (
         <React.Fragment>
-          {usersBio.data ? (
+          {context.user?.bio ? (
             <React.Fragment>
               {usersBio.startEditing ? AboutEditPage : BioJSX}
             </React.Fragment>
