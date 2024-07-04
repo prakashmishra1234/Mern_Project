@@ -57,7 +57,7 @@ const Profile = () => {
         <Typography mt={1} fontFamily={"math"}>
           {context.user?.followers.length ?? 0} Follower
         </Typography>
-        <Typography mt={1} fontFamily={"math"}>
+        <Typography fontFamily={"math"}>
           {context.user?.followings.length ?? 0} Following
         </Typography>
       </React.Fragment>
