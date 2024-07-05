@@ -18,7 +18,6 @@ const Transition = React.forwardRef(function Transition(
 });
 
 interface ICustomDailog {
-  handleOpen: () => void;
   handleClose: () => void;
   title?: string;
   open: boolean;

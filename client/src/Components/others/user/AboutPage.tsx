@@ -191,7 +191,6 @@ const AboutPage = () => {
         open={dailogOpen}
         title="Your Bio"
         handleClose={closeDailog}
-        handleOpen={openDailog}
       >
         <Box dangerouslySetInnerHTML={{ __html: html }} />
         <Button size="small" variant="outlined" onClick={closeDailog}>

@@ -1,6 +1,10 @@
 import React from "react";
 
-const FollowingsList = () => {
+interface IFollowingsList {
+  userId: string;
+}
+
+const FollowingsList: React.FC<IFollowingsList> = (props) => {
   return <div>FollowingsList</div>;
 };
 

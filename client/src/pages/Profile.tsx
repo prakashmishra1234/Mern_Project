@@ -15,6 +15,7 @@ import SettingsPage from "../Components/others/user/SettingsPage";
 import AboutPage from "../Components/others/user/AboutPage";
 import CustomDailog from "../Components/common/CustomDailog";
 import FollowersList from "../Components/others/user/FollowersList";
+import FollowingsList from "../Components/others/user/FollowingsList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,25 +28,31 @@ const Profile = () => {
   const [followersdailogOpen, setFollowersDailogOpen] = React.useState(false);
   const [followingsdailogOpen, setFollowingsDailogOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
+  const [followersUserId, setFollowersUserId] = React.useState("");
+  const [followingsUserId, setFollowingsUserId] = React.useState("");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const openFollowingsDailog = () => {
-    setFollowingsDailogOpen(true);
-  };
-
-  const closeFollowingsDailog = () => {
-    setFollowingsDailogOpen(false);
-  };
-
-  const openFollowersDailog = () => {
+  const openFollowersDailog = (id: string) => {
+    setFollowersUserId(id);
     setFollowersDailogOpen(true);
   };
 
   const closeFollowersDailog = () => {
+    setFollowersUserId("");
     setFollowersDailogOpen(false);
+  };
+
+  const openFollowingsDailog = (id: string) => {
+    setFollowingsUserId(id);
+    setFollowingsDailogOpen(true);
+  };
+
+  const closeFollowingsDailog = () => {
+    setFollowingsUserId("");
+    setFollowingsDailogOpen(false);
   };
 
   function CustomTabPanel(props: TabPanelProps) {
@@ -83,7 +90,7 @@ const Profile = () => {
           fontFamily={"math"}
           display={"flex"}
           alignItems={"center"}
-          onClick={() => openFollowersDailog()}
+          onClick={() => openFollowersDailog(context.user?._id ?? "")}
         >
           {context.user?.followers.length ?? 0} Followers{" "}
         </Link>
@@ -97,13 +104,18 @@ const Profile = () => {
             color: "rgba(0, 0, 0, 0.87)",
             ml: 2,
           }}
-          onClick={() => openFollowingsDailog()}
+          onClick={() => openFollowingsDailog(context.user?._id ?? "")}
         >
           {context.user?.followings.length ?? 0} Followings
         </Link>
       </Box>
     );
   }, [context.user?.followings, context.user?.followers]);
+
+  const followersListJSX = React.useMemo(
+    () => <FollowersList userId={followersUserId} />,
+    [followersUserId]
+  );
 
   return (
     <Box height={"100%"}>
@@ -197,18 +209,16 @@ const Profile = () => {
       <CustomDailog
         open={followersdailogOpen}
         handleClose={closeFollowersDailog}
-        handleOpen={openFollowersDailog}
         title="Followers"
       >
-        <FollowersList />
+        {followersListJSX}
       </CustomDailog>
       <CustomDailog
         open={followingsdailogOpen}
         handleClose={closeFollowingsDailog}
-        handleOpen={openFollowingsDailog}
         title="Followings"
       >
-        <FollowersList />
+        <FollowingsList userId="" />
       </CustomDailog>
     </Box>
   );

@@ -20,6 +20,7 @@ import { ApiMethods } from "../enum/ApiMethods";
 import ProfileImg from "../assets/profile-major.svg";
 import CustomDailog from "../Components/common/CustomDailog";
 import FollowersList from "../Components/others/user/FollowersList";
+import FollowingsList from "../Components/others/user/FollowingsList";
 
 const UserManagement = () => {
   const context = React.useContext(AuthContext);
@@ -30,6 +31,8 @@ const UserManagement = () => {
   const [users, setUsers] = React.useState<UserType[] | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
+  const [followersUserId, setFollowersUserId] = React.useState("");
+  const [followingsUserId, setFollowingsUserId] = React.useState("");
 
   const UnFollowConfirmation = (id: string) => {
     setUserToUnfollow(id);
@@ -49,19 +52,23 @@ const UserManagement = () => {
     setDailogOpen(false);
   };
 
-  const openFollowersDailog = () => {
+  const openFollowersDailog = (id: string) => {
+    setFollowersUserId(id);
     setFollowersDailogOpen(true);
   };
 
   const closeFollowersDailog = () => {
+    setFollowersUserId("");
     setFollowersDailogOpen(false);
   };
 
-  const openFollowingsDailog = () => {
+  const openFollowingsDailog = (id: string) => {
+    setFollowingsUserId(id);
     setFollowingsDailogOpen(true);
   };
 
   const closeFollowingsDailog = () => {
+    setFollowingsUserId("");
     setFollowingsDailogOpen(false);
   };
 
@@ -153,6 +160,11 @@ const UserManagement = () => {
     getUsersList("");
   }, [currentPage]);
 
+  const followersListJSX = React.useMemo(
+    () => <FollowersList userId={followersUserId} />,
+    [followersUserId]
+  );
+
   const cardJsx = React.useMemo(() => {
     return (
       <React.Fragment>
@@ -199,7 +211,7 @@ const UserManagement = () => {
                             fontFamily={"math"}
                             display={"flex"}
                             alignItems={"center"}
-                            onClick={() => openFollowersDailog()}
+                            onClick={() => openFollowersDailog(user._id)}
                           >
                             {user.followers.length ?? 0} Followers{" "}
                           </Link>
@@ -213,7 +225,7 @@ const UserManagement = () => {
                               textDecoration: "none",
                               color: "rgba(0, 0, 0, 0.87)",
                             }}
-                            onClick={() => openFollowingsDailog()}
+                            onClick={() => openFollowingsDailog(user._id)}
                           >
                             {user.followings.length ?? 0} Followings
                           </Link>
@@ -270,11 +282,7 @@ const UserManagement = () => {
           </Grid>
         </Grid>
       )}
-      <CustomDailog
-        open={dailogOpen}
-        handleClose={closeDailog}
-        handleOpen={openDailog}
-      >
+      <CustomDailog open={dailogOpen} handleClose={closeDailog}>
         <Typography>Are you sure you want to unfollow?</Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
@@ -294,18 +302,16 @@ const UserManagement = () => {
       <CustomDailog
         open={followersdailogOpen}
         handleClose={closeFollowersDailog}
-        handleOpen={openFollowersDailog}
         title="Followers"
       >
-        <FollowersList />
+        {followersListJSX}
       </CustomDailog>
       <CustomDailog
         open={followingsdailogOpen}
         handleClose={closeFollowingsDailog}
-        handleOpen={openFollowingsDailog}
         title="Followings"
       >
-        <FollowersList />
+        <FollowingsList userId={""} />
       </CustomDailog>
     </React.Fragment>
   );
