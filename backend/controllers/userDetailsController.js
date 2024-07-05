@@ -2,6 +2,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../model/userModel");
 const ErrorHandler = require("../utils/errorHandler");
 const sendData = require("../utils/sendData");
+const ApiFeatures = require("../utils/ApiFeatures");
 
 // Add bio
 exports.addBio = catchAsyncError(async (req, res, next) => {
@@ -85,7 +86,7 @@ exports.followUser = catchAsyncError(async (req, res, next) => {
     { new: true, runValidators: false }
   );
 
-  sendData({}, 200, res, `You followed ${userToFollow.fullname}`);
+  sendData(null, 200, res, `You followed ${userToFollow.fullname}`);
 });
 
 // unfollow users
@@ -130,5 +131,42 @@ exports.unfollowUser = catchAsyncError(async (req, res, next) => {
     { new: true, runValidators: false }
   );
 
-  sendData({}, 200, res, `You unfollowed ${userToUnFollow.fullname}`);
+  sendData(null, 200, res, `You unfollowed ${userToUnFollow.fullname}`);
+});
+
+exports.getFollowers = catchAsyncError(async (req, res, next) => {
+  const userId = req.body.userId; //|| req.user.id;
+
+  if (!userId) {
+    return next(new ErrorHandler("userId is required.", 400));
+  }
+
+  const user = await User.findById(userId).populate("followers");
+
+  if (!user) {
+    return next(
+      new ErrorHandler("User not found with the provided userId.", 400)
+    );
+  }
+
+  const resultPerPage = 10;
+  const followersCount = user.followers.length;
+
+  const apiFeature = new ApiFeatures(
+    User.find({ _id: { $in: user.followers } }),
+    req.query
+  )
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+
+  let followers = await apiFeature.query;
+
+  const data = {
+    followers,
+    resultPerPage,
+    followersCount,
+  };
+
+  sendData(data, 200, res, "Followers retrieved successfully.");
 });
