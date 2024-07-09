@@ -15,11 +15,11 @@ const UserManagement = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
 
-  const getUsersList = async (searchKeyWord: string) => {
+  const getUsersList = async (searchKeyWord: string, page: number) => {
     context.setLoading(true);
     const data = await getDataFromApi("/api/v1/users", ApiMethods.GET, {
       keyword: searchKeyWord,
-      page: currentPage,
+      page: page,
     });
     if (data.success && data.data) {
       setUsers(data.data.users);
@@ -37,12 +37,12 @@ const UserManagement = () => {
 
   const handleSearchSubmit = (value: SearchModel) => {
     setCurrentPage(1);
-    getUsersList(value.searchValue ?? "");
+    getUsersList(value.searchValue ?? "", 1);
   };
 
   React.useEffect(() => {
-    getUsersList("");
-  }, []);
+    getUsersList("", currentPage);
+  }, [currentPage]);
 
   const cardJsx = React.useMemo(() => {
     return <UserListCard users={users} setUsers={setUsers} />;
