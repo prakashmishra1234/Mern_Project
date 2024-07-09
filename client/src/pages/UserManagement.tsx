@@ -57,7 +57,7 @@ const UserManagement = () => {
       )}
       {cardJsx}
       {totalPage > 1 && (
-        <Grid container spacing={2} my={2}>
+        <Grid container py={2}>
           <Grid item xs={12} display={"flex"} justifyContent={"center"}>
             <CustomPagination
               count={totalPage}
