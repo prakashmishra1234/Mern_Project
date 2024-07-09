@@ -42,11 +42,11 @@ const UserManagement = () => {
 
   React.useEffect(() => {
     getUsersList("");
-  }, [currentPage]);
+  }, []);
 
   const cardJsx = React.useMemo(() => {
     return <UserListCard users={users} setUsers={setUsers} />;
-  }, [context.user, users]);
+  }, [users]);
 
   return (
     <React.Fragment>
