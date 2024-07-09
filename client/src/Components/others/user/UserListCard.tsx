@@ -203,15 +203,15 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
             sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
-            onClick={() => unfollowUsers(userToUnfollow)}
-          >
-            Yes
-          </Link>
-          <Link
-            sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
             onClick={UnFollowDeclined}
           >
             No
+          </Link>
+          <Link
+            sx={{ textDecoration: "none", cursor: "pointer", m: 1 }}
+            onClick={() => unfollowUsers(userToUnfollow)}
+          >
+            Yes
           </Link>
         </Box>
       </CustomDailog>
