@@ -170,3 +170,40 @@ exports.getFollowers = catchAsyncError(async (req, res, next) => {
 
   sendData(data, 200, res, "Followers retrieved successfully.");
 });
+
+exports.getFollowings = catchAsyncError(async (req, res, next) => {
+  const userId = req.body.userId; //|| req.user.id;
+
+  if (!userId) {
+    return next(new ErrorHandler("userId is required.", 400));
+  }
+
+  const user = await User.findById(userId).populate("followings");
+
+  if (!user) {
+    return next(
+      new ErrorHandler("User not found with the provided userId.", 400)
+    );
+  }
+
+  const resultPerPage = 10;
+  const followingsCount = user.followings.length;
+
+  const apiFeature = new ApiFeatures(
+    User.find({ _id: { $in: user.followings } }),
+    req.query
+  )
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+
+  let followings = await apiFeature.query;
+
+  const data = {
+    followings,
+    resultPerPage,
+    followingsCount,
+  };
+
+  sendData(data, 200, res, "Followings retrieved successfully.");
+});
