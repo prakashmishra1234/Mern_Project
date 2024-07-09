@@ -110,11 +110,16 @@ const Profile = () => {
         </Link>
       </Box>
     );
-  }, [context.user?.followings, context.user?.followers]);
+  }, [context.user]);
 
   const followersListJSX = React.useMemo(
     () => <FollowersList userId={followersUserId} />,
     [followersUserId]
+  );
+
+  const followingsListJSX = React.useMemo(
+    () => <FollowingsList userId={followingsUserId} />,
+    [followingsUserId]
   );
 
   return (
@@ -222,7 +227,7 @@ const Profile = () => {
         handleClose={closeFollowingsDailog}
         title="Followings"
       >
-        <FollowingsList userId={followingsUserId} />
+        {followingsListJSX}
       </CustomDailog>
     </Box>
   );

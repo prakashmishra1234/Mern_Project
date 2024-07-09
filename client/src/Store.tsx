@@ -112,7 +112,6 @@ const Store: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     axios
       .get("/api/v1/me")
       .then((res) => {
-        console.log(res.data.data);
         setUser(res.data.data as UserType);
       })
       .catch((err) => {

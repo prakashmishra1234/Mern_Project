@@ -50,19 +50,17 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
       if (context.user) {
         let temp = [...context.user.followings];
         temp.push(id);
-        console.log("temp.length : ", temp.length);
         context.setUser((prevState: any) => ({
           ...prevState,
           followings: temp,
         }));
         if (users) {
           const temp2: UserType[] = [...users];
-          temp2.map((item) => {
+          temp2.map((item, index) => {
             if (item._id === id) {
               context.user && item.followers.push(context.user?._id);
             }
           });
-          console.log("temp2.length : ", temp2.length);
           setUsers(temp2);
         }
       }
@@ -87,12 +85,17 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
         }));
         if (users) {
           const temp2: UserType[] = [...users];
-          temp2.map((item) => {
+          temp2.map((item, i) => {
             if (item._id === id) {
               const index = temp.indexOf(id);
               item.followers.splice(index, 1);
+              temp2.splice(i, 1);
             }
           });
+          context.user.followings.splice(
+            context.user.followings.indexOf(id),
+            1
+          );
           setUsers(temp2);
         }
       }
@@ -107,6 +110,9 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
 
   return (
     <React.Fragment>
+      {users && users?.length < 1 && (
+        <Typography textAlign={"center"}>No data found!</Typography>
+      )}
       {users && users.length > 0 && (
         <Grid container spacing={2}>
           {users.map((user: UserType, index: number) => {
