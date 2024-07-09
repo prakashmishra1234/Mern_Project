@@ -33,10 +33,6 @@ const FollowersList: React.FC<IFollowerList> = (props) => {
     setLoading(false);
   };
 
-  React.useEffect(() => {
-    if (props.userId && props.userId !== "") getFollowersList("");
-  }, [props.userId]);
-
   return (
     <React.Fragment>
       {loading && (
