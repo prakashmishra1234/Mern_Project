@@ -207,18 +207,22 @@ const Profile = () => {
         </Grid>
       </Grid>
       <CustomDailog
+        showTitle={true}
         open={followersdailogOpen}
         handleClose={closeFollowersDailog}
         title="Followers"
+        dailogProps={{ fullScreen: true }}
       >
         {followersListJSX}
       </CustomDailog>
       <CustomDailog
+        showTitle={true}
+        dailogProps={{ fullScreen: true }}
         open={followingsdailogOpen}
         handleClose={closeFollowingsDailog}
         title="Followings"
       >
-        <FollowingsList userId="" />
+        <FollowingsList userId={followingsUserId} />
       </CustomDailog>
     </Box>
   );

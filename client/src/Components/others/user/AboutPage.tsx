@@ -189,6 +189,7 @@ const AboutPage = () => {
       </Box>
       <CustomDailog
         open={dailogOpen}
+        showTitle={true}
         title="Your Bio"
         handleClose={closeDailog}
       >

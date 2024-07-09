@@ -25,10 +25,6 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
   const context = React.useContext(AuthContext);
   const [dailogOpen, setDailogOpen] = React.useState(false);
   const [userToUnfollow, setUserToUnfollow] = React.useState("");
-  const [followersdailogOpen, setFollowersDailogOpen] = React.useState(false);
-  const [followersUserId, setFollowersUserId] = React.useState("");
-  const [followingsUserId, setFollowingsUserId] = React.useState("");
-  const [followingsdailogOpen, setFollowingsDailogOpen] = React.useState(false);
 
   const openDailog = () => {
     setDailogOpen(true);
@@ -50,10 +46,11 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
       {},
       { userId: id }
     );
-    if (data.success && data.data) {
+    if (data.success) {
       if (context.user) {
         let temp = [...context.user.followings];
         temp.push(id);
+        console.log("temp.length : ", temp.length);
         context.setUser((prevState: any) => ({
           ...prevState,
           followings: temp,
@@ -65,6 +62,7 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
               context.user && item.followers.push(context.user?._id);
             }
           });
+          console.log("temp2.length : ", temp2.length);
           setUsers(temp2);
         }
       }
@@ -78,7 +76,7 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
       {},
       { userId: id }
     );
-    if (data.success && data.data) {
+    if (data.success) {
       if (context.user) {
         let temp = [...context.user.followings];
         const index = temp.indexOf(id);
@@ -105,26 +103,6 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
   const UnFollowDeclined = () => {
     setUserToUnfollow("");
     closeDailog();
-  };
-
-  const openFollowersDailog = (id: string) => {
-    setFollowersUserId(id);
-    setFollowersDailogOpen(true);
-  };
-
-  const closeFollowersDailog = () => {
-    setFollowersUserId("");
-    setFollowersDailogOpen(false);
-  };
-
-  const openFollowingsDailog = (id: string) => {
-    setFollowingsUserId(id);
-    setFollowingsDailogOpen(true);
-  };
-
-  const closeFollowingsDailog = () => {
-    setFollowingsUserId("");
-    setFollowingsDailogOpen(false);
   };
 
   return (
@@ -170,7 +148,6 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
                           fontFamily={"math"}
                           display={"flex"}
                           alignItems={"center"}
-                          onClick={() => openFollowersDailog(user._id)}
                         >
                           {user.followers.length ?? 0} Followers{" "}
                         </Link>
@@ -184,7 +161,6 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
                             textDecoration: "none",
                             color: "rgba(0, 0, 0, 0.87)",
                           }}
-                          onClick={() => openFollowingsDailog(user._id)}
                         >
                           {user.followings.length ?? 0} Followings
                         </Link>
@@ -218,7 +194,11 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
           })}
         </Grid>
       )}
-      <CustomDailog open={dailogOpen} handleClose={closeDailog}>
+      <CustomDailog
+        showTitle={false}
+        open={dailogOpen}
+        handleClose={closeDailog}
+      >
         <Typography>Are you sure you want to unfollow?</Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Link
