@@ -165,26 +165,30 @@ const UserListCard: React.FC<IUserCard> = ({ users, setUsers }) => {
                           {user.followings.length ?? 0} Followings
                         </Link>
                       </Box>
-                      {!user.followers.includes(context.user?._id ?? "") ? (
-                        <Link
-                          sx={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => followUsers(user._id)}
-                        >
-                          Follow
-                        </Link>
-                      ) : (
-                        <Link
-                          sx={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => UnFollowConfirmation(user._id)}
-                        >
-                          Following
-                        </Link>
+                      {user._id !== context.user?._id && (
+                        <React.Fragment>
+                          {!user.followers.includes(context.user?._id ?? "") ? (
+                            <Link
+                              sx={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => followUsers(user._id)}
+                            >
+                              Follow
+                            </Link>
+                          ) : (
+                            <Link
+                              sx={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => UnFollowConfirmation(user._id)}
+                            >
+                              Following
+                            </Link>
+                          )}
+                        </React.Fragment>
                       )}
                     </Grid>
                   </Grid>

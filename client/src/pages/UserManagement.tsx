@@ -23,7 +23,7 @@ const UserManagement = () => {
     });
     if (data.success && data.data) {
       setUsers(data.data.users);
-      setTotalPage(data.data.userCount / data.data.resultPerPage);
+      setTotalPage(Math.ceil(data.data.userCount / data.data.resultPerPage));
     }
     context.setLoading(false);
   };
