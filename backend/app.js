@@ -26,9 +26,11 @@ app.use(
 //Route import
 const user = require("./routes/userRoutes");
 const userDetails = require("./routes/userDetailsRoute");
+const cricketNews = require("./routes/cricketNewsRoute");
 
 app.use("/api/v1", user);
 app.use("/api/v1", userDetails);
+app.use("/api/v1", cricketNews);
 app.set("trust proxy", 1);
 
 // static file
