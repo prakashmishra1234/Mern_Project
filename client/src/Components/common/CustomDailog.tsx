@@ -57,7 +57,10 @@ const CustomDailog: React.FC<React.PropsWithChildren<ICustomDailog>> = (
         )}
 
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText
+            component={Box}
+            id="alert-dialog-slide-description"
+          >
             {props.children}
           </DialogContentText>
         </DialogContent>
